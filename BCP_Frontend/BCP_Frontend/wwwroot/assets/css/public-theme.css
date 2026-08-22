@@ -164,3 +164,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     opacity: 0.12;
     pointer-events: none;
 }
+
+
+/* Remove default browser borders, focus outlines, and rings on headings */
+h1, h2, h3, h4, h5, h6,
+h1:focus, h2:focus, h3:focus, h4:focus, h5:focus, h6:focus,
+h1:focus-visible, h2:focus-visible {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Fix for Tailwind / Blazor default component outlines */
+*:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
