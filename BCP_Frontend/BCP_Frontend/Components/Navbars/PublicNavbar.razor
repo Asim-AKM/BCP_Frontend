@@ -1,0 +1,88 @@
+﻿@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<header class="sticky top-0 left-0 right-0 z-50 w-full bg-ink/90 backdrop-blur-md border-b border-line shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+        <!-- Logo -->
+        <NavLink href="" Match="NavLinkMatch.All" class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blood-500 to-blood-900 flex items-center justify-center text-white shadow-lg shadow-blood-900/40">
+                <span class="text-xl">🩸</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-display text-lg font-bold tracking-tight text-white leading-none">BloodConnect<span class="text-blood-500">.pk</span></span>
+                <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase mt-0.5">National SaaS Network</span>
+            </div>
+        </NavLink>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-8 font-semibold text-slate-400 text-sm">
+            <NavLink href="" Match="NavLinkMatch.All" class="hover:text-white transition-colors" ActiveClass="text-white border-b-2 border-blood-500 pb-1">Home</NavLink>
+            <a href="#urgent-cases" class="hover:text-white transition-colors">Urgent Cases</a>
+            <NavLink href="search-stock" class="hover:text-white transition-colors" ActiveClass="text-white border-b-2 border-blood-500 pb-1">Find Blood</NavLink>
+            <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
+            <a href="#testimonials" class="hover:text-white transition-colors">Stories</a>
+        </nav>
+
+        <!-- Desktop Action Buttons -->
+        <div class="hidden lg:flex items-center gap-3">
+            <NavLink href="emergency-request" class="bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blood-400 animate-ping"></span>
+                Broadcast Request
+            </NavLink>
+            <NavLink href="auth/center-register" class="border border-line hover:border-blood-500 hover:text-white bg-surface text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-1.5">
+                <span>🏥</span> Register Center
+            </NavLink>
+            <NavLink href="auth/login" class="text-slate-300 hover:text-white font-bold text-xs px-3 py-2.5 rounded-xl transition-all flex items-center gap-1.5 hover:bg-surface">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+                Login
+            </NavLink>
+        </div>
+
+        <!-- Hamburger Toggle Button -->
+        <button type="button" @onclick="ToggleMobileMenu" class="md:hidden text-slate-300 p-2 rounded-lg hover:bg-surface focus:outline-none cursor-pointer z-50" aria-label="Toggle Menu">
+            @if (!isMobileMenuOpen)
+            {
+                <svg class="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            }
+            else
+            {
+                <svg class="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            }
+        </button>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    @if (isMobileMenuOpen)
+    {
+        <div class="md:hidden bg-surface border-b border-line px-6 py-5 space-y-4 shadow-2xl animate-fadeIn">
+            <nav class="flex flex-col gap-3 font-bold text-slate-300 text-sm">
+                <NavLink href="" Match="NavLinkMatch.All" @onclick="CloseMobileMenu" class="hover:text-white py-1" ActiveClass="text-blood-500">Home</NavLink>
+                <a href="#urgent-cases" @onclick="CloseMobileMenu" class="hover:text-white py-1">Urgent Cases</a>
+                <NavLink href="search-stock" @onclick="CloseMobileMenu" class="hover:text-white py-1" ActiveClass="text-blood-500">Find Blood</NavLink>
+                <a href="#how-it-works" @onclick="CloseMobileMenu" class="hover:text-white py-1">How It Works</a>
+                <a href="#testimonials" @onclick="CloseMobileMenu" class="hover:text-white py-1">Stories</a>
+            </nav>
+            <div class="pt-3 border-t border-line flex flex-col gap-2.5">
+                <NavLink href="emergency-request" @onclick="CloseMobileMenu" class="w-full bg-blood-600 text-white font-bold text-xs py-3 rounded-xl text-center shadow-md flex items-center justify-center gap-2">🚨 Broadcast Emergency Request</NavLink>
+                <NavLink href="auth/center-register" @onclick="CloseMobileMenu" class="w-full border border-line text-slate-300 font-bold text-xs py-3 rounded-xl text-center hover:bg-surface3 flex items-center justify-center gap-2">🏥 Register Center</NavLink>
+                <NavLink href="auth/login" @onclick="CloseMobileMenu" class="w-full bg-surface3 text-white font-bold text-xs py-3 rounded-xl text-center hover:bg-line transition-all flex items-center justify-center gap-2">🔑 Account Login</NavLink>
+            </div>
+        </div>
+    }
+</header>
+
+<div class="vital-pulse"></div>
+
+@code {
+    private bool isMobileMenuOpen = false;
+
+    private void ToggleMobileMenu()
+    {
+        isMobileMenuOpen = !isMobileMenuOpen;
+    }
+
+    private void CloseMobileMenu()
+    {
+        isMobileMenuOpen = false;
+    }
+}

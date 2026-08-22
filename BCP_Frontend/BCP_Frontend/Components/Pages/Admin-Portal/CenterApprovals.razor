@@ -1,0 +1,280 @@
+﻿@using BCP_Frontend.Components.Layout
+@page "/admin/center-approvals"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Center Verification & Approvals — BloodConnect.pk</PageTitle>
+
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h1 class="font-display text-2xl font-bold tracking-tight text-white">Center Verification & SaaS Approvals</h1>
+        <p class="text-xs text-slate-400 mt-1">Verify health authority licenses, inspect submitted registration documents, and approve SaaS subscription payments.</p>
+    </div>
+    <div class="flex items-center gap-3 text-xs">
+        <div class="bg-surface border border-line px-3 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Pending Approval</span>
+            <span class="text-signal-400 font-extrabold text-sm">3</span>
+        </div>
+        <div class="bg-surface border border-line px-3 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Pending Payments</span>
+            <span class="text-ice-400 font-extrabold text-sm">2</span>
+        </div>
+    </div>
+</div>
+
+<div class="space-y-4">
+
+    <!-- Card 1: Al-Khidmat -->
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4 hover:border-slate-600/60 transition-colors">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-line pb-4">
+            <div class="flex items-start gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-signal-500/10 border border-signal-500/25 flex items-center justify-center text-signal-400 font-extrabold text-xl shrink-0">🏥</div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="text-base font-bold text-white">Al-Khidmat Blood Bank & Transfusion Center</h2>
+                        <span class="bg-signal-500/10 text-signal-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border border-signal-500/25">Awaiting Verification</span>
+                        <span class="bg-ice-500/10 text-ice-400 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-ice-500/25">💳 Payment Slip Submitted</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Sahiwal, Punjab • Applied on Aug 15, 2026</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button @onclick='() => OpenDocModal("Al-Khidmat Blood Bank", "PB-SWL-992")' class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition-all border border-line flex items-center gap-1.5 cursor-pointer"><span>📄</span> View Documents</button>
+                <button @onclick='() => OpenPaymentModal("Al-Khidmat Blood Bank", "PKR 45,000 / Year", "Meezan Bank - TRX# 883920192")' class="bg-ice-950/60 hover:bg-ice-900/40 text-ice-300 text-xs font-bold px-3.5 py-2 rounded-xl transition-all border border-ice-800/50 flex items-center gap-1.5 cursor-pointer"><span>💳</span> Payment Approval</button>
+                <button @onclick='() => OpenApproveModal("Al-Khidmat Blood Bank", "PB-SWL-992", "Professional Tier (PKR 45,000/yr)")' class="bg-vital-500 hover:bg-vital-400 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md cursor-pointer">✓ Approve</button>
+                <button @onclick='() => OpenRejectModal("Al-Khidmat Blood Bank")' class="bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold px-3 py-2 rounded-xl transition-all border border-rose-800/50 cursor-pointer">✕ Reject</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Provincial License No.</span><p class="font-mono text-slate-200 font-semibold">PB-SWL-992</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Medical In-Charge</span><p class="text-slate-200 font-semibold">Dr. Tariq Mahmood (MBBS, FCPS)</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Official Email</span><p class="text-slate-200 font-semibold truncate">alkhidmat.swl@gmail.com</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Plan & Price</span><p class="text-vital-400 font-bold">Professional Tier • PKR 45,000/yr</p></div>
+        </div>
+    </div>
+
+    <!-- Card 2: Fatimid Foundation -->
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4 hover:border-slate-600/60 transition-colors">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-line pb-4">
+            <div class="flex items-start gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-signal-500/10 border border-signal-500/25 flex items-center justify-center text-signal-400 font-extrabold text-xl shrink-0">🏥</div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="text-base font-bold text-white">Fatimid Foundation Center</h2>
+                        <span class="bg-signal-500/10 text-signal-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border border-signal-500/25">Awaiting Verification</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Multan, Punjab • Applied on Aug 14, 2026</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button @onclick='() => OpenDocModal("Fatimid Foundation Center", "PB-MLT-301")' class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition-all border border-line flex items-center gap-1.5 cursor-pointer"><span>📄</span> View Documents</button>
+                <button @onclick='() => OpenPaymentModal("Fatimid Foundation Center", "PKR 25,000 / Year", "JazzCash Corporate - Ref# JC-992120")' class="bg-ice-950/60 hover:bg-ice-900/40 text-ice-300 text-xs font-bold px-3.5 py-2 rounded-xl transition-all border border-ice-800/50 flex items-center gap-1.5 cursor-pointer"><span>💳</span> Payment Approval</button>
+                <button @onclick='() => OpenApproveModal("Fatimid Foundation Center", "PB-MLT-301", "Standard Tier (PKR 25,000/yr)")' class="bg-vital-500 hover:bg-vital-400 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md cursor-pointer">✓ Approve</button>
+                <button @onclick='() => OpenRejectModal("Fatimid Foundation Center")' class="bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold px-3 py-2 rounded-xl transition-all border border-rose-800/50 cursor-pointer">✕ Reject</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Provincial License No.</span><p class="font-mono text-slate-200 font-semibold">PB-MLT-301</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Medical In-Charge</span><p class="text-slate-200 font-semibold">Dr. Saira Bano (Hematologist)</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Official Email</span><p class="text-slate-200 font-semibold truncate">info@fatimid.multan.org</p></div>
+            <div class="bg-ink p-3 rounded-xl border border-line space-y-1"><span class="text-slate-500 text-[10px] uppercase font-extrabold">Plan & Price</span><p class="text-vital-400 font-bold">Standard Tier • PKR 25,000/yr</p></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 1. DOCUMENT VIEWER MODAL -->
+@if (isDocModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between p-5 border-b border-line bg-surface2">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-surface3 text-white text-base">📁</span>
+                    <div><h3 class="text-base font-bold text-white">@modalCenterName</h3><p class="text-xs font-mono text-slate-400">License: @modalLicenseNo</p></div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold p-1 cursor-pointer">✕</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+                <div class="flex items-center gap-2 border-b border-line pb-3 overflow-x-auto">
+                    <button class="bg-blood-700 text-white font-bold px-3 py-2 rounded-lg shrink-0">1. Provincial Health License.pdf</button>
+                    <button class="bg-surface3 text-slate-300 hover:bg-line px-3 py-2 rounded-lg shrink-0">2. Medical Officer CNIC.pdf</button>
+                    <button class="bg-surface3 text-slate-300 hover:bg-line px-3 py-2 rounded-lg shrink-0">3. Lab Accreditation Cert.pdf</button>
+                </div>
+                <div class="bg-ink rounded-xl border border-line p-8 flex flex-col items-center justify-center min-h-[280px] text-center space-y-3">
+                    <div class="w-16 h-16 rounded-2xl bg-blood-500/10 border border-blood-500/25 flex items-center justify-center text-3xl text-blood-400">📄</div>
+                    <div><p class="text-sm font-bold text-white">Provincial Health License Certificate</p><p class="text-xs text-slate-400 mt-1">Issued by Punjab Health Regulatory Authority • Valid till Dec 2027</p></div>
+                    <div class="flex items-center gap-3 pt-2">
+                        <button class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-4 py-2 rounded-xl transition-all border border-line cursor-pointer">🔍 Zoom Preview</button>
+                        <button class="bg-blood-600 hover:bg-blood-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all cursor-pointer">⬇️ Download Original PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 p-4 border-t border-line bg-surface2">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Close Dossier</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- 2. PAYMENT APPROVAL MODAL -->
+@if (isPaymentModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-ice-500/10 text-ice-400 text-base">💳</span>
+                    <div><h3 class="text-base font-bold text-white">SaaS Subscription Payment Verification</h3><p class="text-xs text-slate-400">Center: @modalCenterName</p></div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="grid grid-cols-2 gap-3 bg-ink p-4 rounded-xl border border-line">
+                    <div><span class="text-slate-500 text-[10px] uppercase font-bold">Subscription Plan</span><p class="text-vital-400 font-extrabold text-sm mt-0.5">@modalAmount</p></div>
+                    <div><span class="text-slate-500 text-[10px] uppercase font-bold">Payment Method & Ref</span><p class="text-slate-200 font-mono font-semibold text-xs mt-0.5 truncate">@modalTrx</p></div>
+                </div>
+                <div class="bg-ink p-4 rounded-xl border border-line flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🖼️</span>
+                        <div><p class="font-bold text-slate-200">bank_payment_receipt.jpg</p><p class="text-[11px] text-slate-500">Uploaded 12 hours ago • 1.4 MB</p></div>
+                    </div>
+                    <button class="text-xs text-ice-400 font-bold hover:underline cursor-pointer">View Receipt</button>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Payment Reconciliation Notes</label>
+                    <textarea rows="2" placeholder="e.g. Verified with Meezan Bank Corporate Account ending #4012" class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-ice-500"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-ice-500 hover:bg-ice-400 text-slate-950 font-bold text-xs shadow-md cursor-pointer">✓ Confirm Payment Received</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- 3. APPROVE CENTER MODAL -->
+@if (isApproveModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-vital-500/10 text-vital-400 text-base">✓</span>
+                    <div><h3 class="text-base font-bold text-white">Approve Center & Activate SaaS</h3><p class="text-xs text-slate-400">Center: @modalCenterName</p></div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="p-4 bg-vital-500/10 border border-vital-500/25 rounded-xl space-y-1">
+                    <p class="font-bold text-vital-300">Action Summary</p>
+                    <p class="text-slate-300">Approving this center will auto-generate an organization admin credentials package and send an onboarding access link via email.</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between bg-ink p-2.5 rounded-lg border border-line"><span class="text-slate-400">License Verification:</span><span class="font-mono text-vital-400 font-bold">@modalLicenseNo</span></div>
+                    <div class="flex justify-between bg-ink p-2.5 rounded-lg border border-line"><span class="text-slate-400">Activated Plan:</span><span class="text-slate-200 font-bold">@modalTier</span></div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Welcome Message / Note for Center</label>
+                    <textarea rows="2" class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-vital-500">Welcome to BloodConnect.pk! Your center has been approved. You can now log in and manage your blood inventory.</textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-vital-500 hover:bg-vital-400 text-slate-950 font-bold text-xs shadow-md cursor-pointer">Finalize Approval & Activate</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- 4. REJECT CENTER MODAL -->
+@if (isRejectModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-blood-500/10 text-blood-400 text-base">✕</span>
+                    <div><h3 class="text-base font-bold text-white">Reject Registration Application</h3><p class="text-xs text-slate-400">Center: @modalCenterName</p></div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Select Rejection Reason</label>
+                    <select class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blood-500">
+                        <option>Invalid or Expired Health License Document</option>
+                        <option>Unverifiable Medical In-Charge Credentials</option>
+                        <option>Payment Transfer Verification Failed</option>
+                        <option>Duplicate Center Registration</option>
+                        <option>Other Custom Reason</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Detailed Explanation (Emailed to Center)</label>
+                    <textarea rows="3" placeholder="Please re-upload a clear, non-expired copy of your provincial health regulatory license..." class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blood-500"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs shadow-md cursor-pointer">Confirm Rejection</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isDocModalOpen = false;
+    private bool isPaymentModalOpen = false;
+    private bool isApproveModalOpen = false;
+    private bool isRejectModalOpen = false;
+
+    private string modalCenterName = "";
+    private string modalLicenseNo = "";
+    private string modalAmount = "";
+    private string modalTrx = "";
+    private string modalTier = "";
+
+    private void CloseModals()
+    {
+        isDocModalOpen = false;
+        isPaymentModalOpen = false;
+        isApproveModalOpen = false;
+        isRejectModalOpen = false;
+    }
+
+    private void OpenDocModal(string center, string license)
+    {
+        modalCenterName = center;
+        modalLicenseNo = license;
+        CloseModals();
+        isDocModalOpen = true;
+    }
+
+    private void OpenPaymentModal(string center, string amount, string trx)
+    {
+        modalCenterName = center;
+        modalAmount = amount;
+        modalTrx = trx;
+        CloseModals();
+        isPaymentModalOpen = true;
+    }
+
+    private void OpenApproveModal(string center, string license, string tier)
+    {
+        modalCenterName = center;
+        modalLicenseNo = license;
+        modalTier = tier;
+        CloseModals();
+        isApproveModalOpen = true;
+    }
+
+    private void OpenRejectModal(string center)
+    {
+        modalCenterName = center;
+        CloseModals();
+        isRejectModalOpen = true;
+    }
+}

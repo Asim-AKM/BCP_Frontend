@@ -1,0 +1,70 @@
+﻿@inject NavigationManager Navigation
+
+<aside class="h-full flex flex-col justify-between overflow-y-auto bg-surface">
+    <div class="p-4 space-y-6">
+        <div class="p-3 bg-surface2 rounded-xl border border-line">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Access Level</p>
+            <p class="text-xs font-bold text-white truncate mt-0.5">Global System Control</p>
+            <p class="text-[10px] font-mono text-slate-500">SA-SYS-MASTER</p>
+        </div>
+
+        <nav class="space-y-1 font-semibold text-xs text-slate-300">
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 px-3 mb-2">Overview</p>
+
+            <NavLink href="admin/dashboard" Match="NavLinkMatch.All"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>📊</span> System Dashboard
+            </NavLink>
+    
+            <NavLink href="admin/center-approvals"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white justify-between"
+                     ActiveClass="nav-link-active">
+                <span class="flex items-center gap-3"><span>🏥</span> Center Approvals</span>
+                <span class="bg-signal-500 text-slate-950 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md">3</span>
+            </NavLink>
+    
+            <NavLink href="admin/all-centers"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>🏢</span> Registered Centers
+            </NavLink>
+    
+            <NavLink href="admin/broadcasts"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>🚨</span> Emergency Monitor
+            </NavLink>
+
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 px-3 pt-4 mb-2">Administration</p>
+    
+            <NavLink href="admin/users"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>👥</span> Global User Management
+            </NavLink>
+    
+            <NavLink href="admin/system-logs"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>📜</span> Audit & Error Logs
+            </NavLink>
+    
+            <NavLink href="admin/platform-settings"
+                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all hover:bg-surface3 hover:text-white"
+                     ActiveClass="nav-link-active">
+                <span>⚙️</span> Platform Settings
+            </NavLink>
+        </nav>
+    </div>
+
+    <div class="p-4 border-t border-line bg-surface">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-blood-900/50 border border-blood-700/50 flex items-center justify-center font-bold text-blood-200 text-xs">SA</div>
+            <div class="overflow-hidden">
+                <p class="text-xs font-bold text-white truncate">Super Admin Account</p>
+                <p class="text-[10px] font-medium text-slate-500 truncate">master@bloodconnect.pk</p>
+            </div>
+        </div>
+    </div>
+</aside>

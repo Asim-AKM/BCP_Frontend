@@ -1,0 +1,127 @@
+﻿@page "/search-stock"
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Filter Section -->
+    <div class="reveal glass rounded-2xl p-6 sm:p-8 mb-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+            <div>
+                <h1 class="font-display text-2xl font-bold text-white">Live Inventory Directory</h1>
+                <p class="text-xs text-slate-400 font-medium">Search verified real-time blood stock across partner centers in Pakistan</p>
+            </div>
+            <span class="text-xs font-semibold text-vital-400 bg-vital-500/10 px-3 py-1 rounded-md border border-vital-500/25 flex items-center gap-1.5">
+                <span class="pulse-dot" style="background:#12d6ac"></span>Live Sync Active
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">City</label>
+                <select @bind="selectedCity" class="w-full mt-1.5 bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-all">
+                    <option value="">All Cities</option>
+                    <option value="Islamabad">Islamabad</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Peshawar">Peshawar</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Blood Group</label>
+                <select @bind="selectedBloodGroup" class="w-full mt-1.5 bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-all">
+                    <option value="">All Blood Groups</option>
+                    <option value="O-">O Negative (O-)</option>
+                    <option value="A+">A Positive (A+)</option>
+                    <option value="B+">B Positive (B+)</option>
+                    <option value="AB+">AB Positive (AB+)</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Component</label>
+                <select @bind="selectedComponent" class="w-full mt-1.5 bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-all">
+                    <option value="">All Components</option>
+                    <option value="Whole Blood">Whole Blood</option>
+                    <option value="Platelets">Platelets</option>
+                    <option value="Plasma">Plasma</option>
+                    <option value="Packed RBCs">Packed RBCs</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button @onclick="ApplyFilter" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-blood-950/40 transition-all">
+                    Apply Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Results List -->
+    <div class="space-y-4">
+        <!-- Item 1 -->
+        <div class="reveal tilt-card bg-surface p-6 rounded-2xl border border-line flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-vital-500/40 transition-colors">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-vital-500/10 text-vital-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-vital-500/25">Verified Stock</span>
+                    <span class="text-xs text-slate-500 font-medium">Updated 5 mins ago</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mt-1">Shifa International Blood Bank</h3>
+                <p class="text-xs text-slate-400">Pitras Bukhari Rd, H-8/4, Islamabad • Ph: (051) 8463000</p>
+            </div>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <div class="text-left md:text-center">
+                    <span class="block text-2xl font-black text-blood-400">4 Units</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-500">O- Available</span>
+                </div>
+                <button @onclick='() => ReserveUnit("Shifa International Blood Bank")' class="bg-surface3 hover:bg-line text-white font-bold text-xs px-5 py-3 rounded-xl shadow-md border border-line">
+                    Reserve Unit
+                </button>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="reveal tilt-card bg-surface p-6 rounded-2xl border border-line flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-signal-500/40 transition-colors" style="transition-delay:.06s">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-signal-500/10 text-signal-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-signal-500/25">Low Stock</span>
+                    <span class="text-xs text-slate-500 font-medium">Updated 12 mins ago</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mt-1">PIMS Central Blood Bank</h3>
+                <p class="text-xs text-slate-400">G-8/3, Islamabad • Ph: (051) 9261170</p>
+            </div>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <div class="text-left md:text-center">
+                    <span class="block text-2xl font-black text-signal-400">1 Unit</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-500">O- Available</span>
+                </div>
+                <button @onclick='() => ReserveUnit("PIMS Central Blood Bank")' class="bg-surface3 hover:bg-line text-white font-bold text-xs px-5 py-3 rounded-xl shadow-md border border-line">
+                    Reserve Unit
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string selectedCity = "Islamabad";
+    private string selectedBloodGroup = "O-";
+    private string selectedComponent = "Whole Blood";
+
+    private void ApplyFilter()
+    {
+        // Yahan aap filter logic ya database/API call implement kar sakte hain
+    }
+
+    private void ReserveUnit(string bloodBankName)
+    {
+        // Reservation modal ya action handle karein
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Page load hone par JS animations / observer ko trigger karne ke liye
+            await JSRuntime.InvokeVoidAsync("initPublicPageScript");
+        }
+    }
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+}

@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-ink">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CDN & Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+        theme: {
+        extend: {
+        fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['"Space Grotesk"', 'sans-serif'],
+        },
+        colors: {
+        ink: '#050810', surface: '#0c1120', surface2: '#121a2e', surface3: '#1a2338', line: '#232c44',
+        blood: { 400:'#ff6b8a',500:'#ff2d55',600:'#e0173f',700:'#b81036',900:'#4a0616' },
+        vital: { 400:'#3ee6c4',500:'#12d6ac',600:'#0eb08c' },
+        signal: { 400:'#ffb020',500:'#f59e0b' },
+        ice: { 400:'#5ec8ff',500:'#22a6f0' },
+        }
+        }
+        }
+        }
+    </script>
+
+    <!-- REMOVED BOOTSTRAP TO PREVENT BLUE GLITCH & SHRINK -->
+    <link rel="stylesheet" href="@Assets["BCP_Frontend.styles.css"]" />
+    <link rel="stylesheet" href="assets/css/public-theme.css">
+    <!-- Admin Specific Theme CSS -->
+    <link rel="stylesheet" href="assets/css/admin-theme.css">
+    
+    <ImportMap />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet />
+</head>
+<body class="font-sans bg-ink text-slate-100 antialiased selection:bg-blood-600 selection:text-white min-h-screen overflow-x-hidden">
+    <Routes @rendermode="InteractiveServer" />
+    
+    <!-- Scripts -->
+    <script src="_framework/blazor.web.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="assets/js/hero-3d.js"></script>
+    <script src="assets/js/public-shared.js"></script>
+</body>
+</html>

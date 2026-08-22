@@ -1,0 +1,12 @@
+﻿@inherits LayoutComponentBase
+@using BCP_Frontend.Components.Navbars
+
+<div class="min-h-screen w-full flex flex-col bg-ink text-slate-100 overflow-x-visible">
+    <PublicNavbar />
+    
+    <main class="flex-1 w-full">
+        @Body
+    </main>
+    
+    <PublicFooter />
+</div>

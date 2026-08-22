@@ -1,0 +1,196 @@
+﻿@using BCP_Frontend.Components.Layout
+@page "/admin/dashboard"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Super Admin Dashboard — BloodConnect.pk</PageTitle>
+
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h1 class="font-display text-2xl font-bold tracking-tight text-white">Super Admin Dashboard</h1>
+        <p class="text-xs text-slate-400 mt-1">Platform-wide network operations, center verification queue, and activity overview.</p>
+    </div>
+    <div class="flex gap-2">
+        <NavLink href="admin/center-approvals" class="bg-signal-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-amber-950/20 flex items-center gap-2">
+            <span>⚠️</span> Review Pending Centers (3)
+        </NavLink>
+    </div>
+</div>
+
+<!-- Stat Cards Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-surface p-5 rounded-2xl border border-line space-y-2 hover:-translate-y-0.5 transition-all">
+        <div class="flex items-center justify-between text-slate-400">
+            <span class="text-xs font-semibold uppercase tracking-wider">Total Centers</span>
+            <span class="text-lg">🏥</span>
+        </div>
+        <p class="font-display text-2xl font-bold text-white">48</p>
+        <p class="text-[11px] text-vital-400 font-semibold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-vital-400"></span> +4 verified this week</p>
+    </div>
+
+    <div class="bg-surface p-5 rounded-2xl border border-line space-y-2 hover:-translate-y-0.5 transition-all">
+        <div class="flex items-center justify-between text-slate-400">
+            <span class="text-xs font-semibold uppercase tracking-wider">Pending Approvals</span>
+            <span class="text-lg">⏳</span>
+        </div>
+        <p class="font-display text-2xl font-bold text-signal-400">3</p>
+        <p class="text-[11px] text-signal-400/90 font-semibold">Requires document audit</p>
+    </div>
+
+    <div class="bg-surface p-5 rounded-2xl border border-line space-y-2 hover:-translate-y-0.5 transition-all">
+        <div class="flex items-center justify-between text-slate-400">
+            <span class="text-xs font-semibold uppercase tracking-wider">Active Broadcasts</span>
+            <span class="text-lg">🚨</span>
+        </div>
+        <p class="font-display text-2xl font-bold text-blood-500">12</p>
+        <p class="text-[11px] text-blood-400 font-semibold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blood-500 animate-ping"></span> Urgent requests live</p>
+    </div>
+
+    <div class="bg-surface p-5 rounded-2xl border border-line space-y-2 hover:-translate-y-0.5 transition-all">
+        <div class="flex items-center justify-between text-slate-400">
+            <span class="text-xs font-semibold uppercase tracking-wider">Registered Donors</span>
+            <span class="text-lg">👥</span>
+        </div>
+        <p class="font-display text-2xl font-bold text-white">12,450</p>
+        <p class="text-[11px] text-vital-400 font-semibold">Across 14 cities</p>
+    </div>
+</div>
+
+<!-- Pending Approvals Priority Table -->
+<div class="bg-surface rounded-2xl border border-line overflow-hidden">
+    <div class="p-4 sm:p-5 border-b border-line flex items-center justify-between">
+        <div>
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Pending Center Verification Requests</h2>
+            <p class="text-xs text-slate-400">Newly registered blood banks and hospital centers awaiting platform authorization.</p>
+        </div>
+        <NavLink href="admin/center-approvals" class="text-xs font-bold text-blood-400 hover:text-blood-300 transition-colors">View All &rarr;</NavLink>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+            <thead class="bg-surface2 text-slate-500 uppercase text-[10px] tracking-wider font-semibold">
+                <tr>
+                    <th class="p-4">Center Details</th>
+                    <th class="p-4">Location</th>
+                    <th class="p-4">License / ID</th>
+                    <th class="p-4">Submitted Date</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4 text-right">Quick Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-line font-medium text-slate-300">
+                <tr class="hover:bg-surface2/60 transition-colors">
+                    <td class="p-4">
+                        <p class="font-bold text-white text-sm">Al-Khidmat Blood Bank</p>
+                        <p class="text-[10px] text-slate-500">alkhidmat.swl@gmail.com</p>
+                    </td>
+                    <td class="p-4">Sahiwal, Punjab</td>
+                    <td class="p-4 font-mono text-slate-300">PB-SWL-992</td>
+                    <td class="p-4">Aug 15, 2026</td>
+                    <td class="p-4">
+                        <span class="bg-signal-500/10 text-signal-400 text-[10px] font-extrabold px-2.5 py-1 rounded-md border border-signal-500/25">Pending Review</span>
+                    </td>
+                    <td class="p-4 text-right space-x-2">
+                        <button class="bg-vital-500 hover:bg-vital-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition-all cursor-pointer">Approve</button>
+                        <NavLink href="admin/center-approvals" class="bg-surface3 hover:bg-line text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[11px] transition-all inline-block">Details</NavLink>
+                    </td>
+                </tr>
+                <tr class="hover:bg-surface2/60 transition-colors">
+                    <td class="p-4">
+                        <p class="font-bold text-white text-sm">PIMS Blood Transfusion Center</p>
+                        <p class="text-[10px] text-slate-500">bloodbank@pims.gov.pk</p>
+                    </td>
+                    <td class="p-4">Islamabad, ICT</td>
+                    <td class="p-4 font-mono text-slate-300">ICT-ISB-008</td>
+                    <td class="p-4">Aug 14, 2026</td>
+                    <td class="p-4">
+                        <span class="bg-signal-500/10 text-signal-400 text-[10px] font-extrabold px-2.5 py-1 rounded-md border border-signal-500/25">Pending Review</span>
+                    </td>
+                    <td class="p-4 text-right space-x-2">
+                        <button class="bg-vital-500 hover:bg-vital-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition-all cursor-pointer">Approve</button>
+                        <NavLink href="admin/center-approvals" class="bg-surface3 hover:bg-line text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[11px] transition-all inline-block">Details</NavLink>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Two-Column Section: Live Emergency Feed & System Audit Stream -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-line pb-3">
+            <h2 class="text-xs font-bold text-white uppercase tracking-wider">Live Regional Emergency Broadcasts</h2>
+            <span class="bg-blood-500/10 text-blood-400 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-blood-500/25 flex items-center gap-1.5">Realtime</span>
+        </div>
+
+        <div class="space-y-3">
+            <div class="p-3 bg-surface2 rounded-xl border border-line flex items-center justify-between">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="bg-blood-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded">O- NEGATIVE</span>
+                        <span class="text-xs font-bold text-white">Shifa Hospital, Islamabad</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Required 3 Units • Patient: Trauma Emergency</p>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-500">5m ago</span>
+            </div>
+
+            <div class="p-3 bg-surface2 rounded-xl border border-line flex items-center justify-between">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="bg-blood-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded">B+ POSITIVE</span>
+                        <span class="text-xs font-bold text-white">Lady Reading Hospital, Peshawar</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Required 2 Units • Patient: Surgical Unit</p>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-500">18m ago</span>
+            </div>
+
+            <div class="p-3 bg-surface2 rounded-xl border border-line flex items-center justify-between">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="bg-blood-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded">AB- NEGATIVE</span>
+                        <span class="text-xs font-bold text-white">Indus Hospital, Karachi</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Required 1 Unit • Patient: ICU Critical</p>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-500">42m ago</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-line pb-3">
+            <h2 class="text-xs font-bold text-white uppercase tracking-wider">Recent System Audit Log</h2>
+            <NavLink href="admin/system-logs" class="text-[11px] text-slate-400 hover:text-white font-semibold">View Logs</NavLink>
+        </div>
+
+        <div class="space-y-3 font-mono text-[11px]">
+            <div class="p-3 bg-ink rounded-xl border border-line space-y-1">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-vital-400 font-bold">[CENTER_APPROVED]</span>
+                    <span>12:44:02</span>
+                </div>
+                <p class="text-slate-300">Center "DHQ Hospital Blood Center" approved by SuperAdmin.</p>
+            </div>
+
+            <div class="p-3 bg-ink rounded-xl border border-line space-y-1">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-ice-400 font-bold">[SAAS_SUBSCRIPTION]</span>
+                    <span>11:15:20</span>
+                </div>
+                <p class="text-slate-300">Shifa Hospital upgraded to Professional SaaS Tier.</p>
+            </div>
+
+            <div class="p-3 bg-ink rounded-xl border border-line space-y-1">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-signal-400 font-bold">[NEW_REGISTRATION]</span>
+                    <span>09:30:11</span>
+                </div>
+                <p class="text-slate-300">Al-Khidmat Swl submitted documents for verification.</p>
+            </div>
+        </div>
+    </div>
+</div>

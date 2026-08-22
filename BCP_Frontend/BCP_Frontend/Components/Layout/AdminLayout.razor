@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+@rendermode InteractiveServer
+@using BCP_Frontend.Components.Navbars
+
+<div class="admin-canvas text-slate-100 min-h-screen flex flex-col font-sans">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md text-white border-b border-line h-16 flex items-center justify-between px-4 sm:px-6">
+        <div class="flex items-center gap-3">
+            <button type="button" @onclick="ToggleSidebar" class="lg:hidden text-slate-400 hover:text-white p-2 rounded-xl focus:outline-none hover:bg-surface3 transition-all cursor-pointer" aria-label="Toggle Navigation">
+                @if (!isSidebarOpen)
+                {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                }
+                else
+                {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                }
+            </button>
+            <NavLink href="" class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blood-500 to-blood-900 flex items-center justify-center text-white text-sm shadow-lg shadow-blood-900/40">🩸</div>
+                <span class="font-display text-base font-bold tracking-tight">BloodConnect<span class="text-blood-500">.pk</span></span>
+            </NavLink>
+            <span class="bg-blood-500/10 text-blood-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-blood-500/25 hidden sm:inline-block tracking-wide">SUPER ADMIN</span>
+        </div>
+
+        <div class="flex items-center gap-3 sm:gap-4">
+            <span class="bg-vital-500/10 text-vital-400 text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full border border-vital-500/25 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-vital-400 animate-pulse"></span>
+                <span>System Online</span>
+            </span>
+            <NavLink href="auth/login" class="text-xs font-semibold text-slate-400 hover:text-white transition-colors">Logout</NavLink>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        @if (isSidebarOpen)
+        {
+            <div @onclick="ToggleSidebar" class="fixed inset-0 bg-ink/70 z-20 lg:hidden backdrop-blur-sm"></div>
+        }
+
+        <!-- Left Sidebar (Responsive Drawer) -->
+        <div class="@(isSidebarOpen ? "translate-x-0" : "-translate-x-full") lg:translate-x-0 fixed lg:static top-16 lg:top-0 bottom-0 left-0 z-30 transition-transform duration-200 ease-in-out bg-surface border-r border-line">
+            <AdminSidebar />
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    private bool isSidebarOpen = false;
+
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen;
+    }
+}

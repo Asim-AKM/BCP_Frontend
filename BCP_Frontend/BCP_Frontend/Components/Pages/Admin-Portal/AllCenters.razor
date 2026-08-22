@@ -1,0 +1,281 @@
+﻿@using BCP_Frontend.Components.Layout
+@page "/admin/all-centers"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Registered Centers Directory — BloodConnect.pk</PageTitle>
+
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h1 class="font-display text-2xl font-bold tracking-tight text-white">Registered Centers Directory</h1>
+        <p class="text-xs text-slate-400 mt-1">Manage active blood banks, monitor stock levels, manage SaaS subscriptions, and freeze/activate accounts.</p>
+    </div>
+    <div class="flex items-center gap-3 text-xs">
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Total Centers</span>
+            <span class="text-white font-extrabold text-sm">48</span>
+        </div>
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Active</span>
+            <span class="text-vital-400 font-extrabold text-sm">42</span>
+        </div>
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Suspended</span>
+            <span class="text-rose-400 font-extrabold text-sm">2</span>
+        </div>
+    </div>
+</div>
+
+<!-- Search & Filters Bar -->
+<div class="bg-surface p-4 rounded-2xl border border-line flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="relative w-full md:w-96">
+        <input type="text" placeholder="Search center, license, or city..." class="w-full bg-ink text-slate-100 text-xs rounded-xl pl-9 pr-4 py-2.5 border border-line focus:outline-none focus:border-blood-500 transition-colors">
+        <svg class="w-4 h-4 text-slate-500 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    </div>
+    <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="">All Provinces</option>
+            <option value="punjab">Punjab</option>
+            <option value="sindh">Sindh</option>
+            <option value="kp">Khyber Pakhtunkhwa</option>
+            <option value="balochistan">Balochistan</option>
+            <option value="ict">Islamabad (ICT)</option>
+        </select>
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="">All SaaS Tiers</option>
+            <option value="enterprise">Enterprise</option>
+            <option value="professional">Professional</option>
+            <option value="standard">Standard</option>
+        </select>
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="active">Status: Active Only</option>
+            <option value="suspended">Status: Suspended</option>
+            <option value="expired">Status: Plan Expired</option>
+            <option value="all">Status: All</option>
+        </select>
+    </div>
+</div>
+
+<!-- Centers Directory Table -->
+<div class="bg-surface rounded-2xl border border-line overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-surface2 text-slate-500 font-bold uppercase tracking-wider border-b border-line text-[10px]">
+                    <th class="p-4">Center Info & License</th>
+                    <th class="p-4">Location</th>
+                    <th class="p-4">SaaS Tier & Renewal</th>
+                    <th class="p-4 text-center">Live Units</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-line font-medium">
+                <!-- Row 1 -->
+                <tr class="hover:bg-surface2/60 transition-colors">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-vital-500/10 border border-vital-500/25 flex items-center justify-center text-vital-400 font-extrabold text-base shrink-0">🏥</div>
+                            <div>
+                                <p class="font-bold text-white text-sm">Shaukat Khanum Blood Bank</p>
+                                <p class="text-[11px] font-mono text-slate-500">License: PB-LHR-1082</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4"><p class="text-slate-200">Lahore</p><p class="text-[11px] text-slate-500">Punjab</p></td>
+                    <td class="p-4">
+                        <span class="bg-ice-500/10 text-ice-400 text-[10px] font-extrabold px-2 py-0.5 rounded border border-ice-500/25">Enterprise</span>
+                        <p class="text-[11px] text-slate-500 mt-1">Renews: Dec 15, 2026</p>
+                    </td>
+                    <td class="p-4 text-center"><span class="text-vital-400 font-extrabold text-sm">342</span><p class="text-[10px] text-slate-500">Units in Stock</p></td>
+                    <td class="p-4">
+                        <span class="bg-vital-500/10 text-vital-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-vital-500/25 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-vital-500"></span> Active</span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button @onclick='() => OpenManageModal("Shaukat Khanum Blood Bank", "PB-LHR-1082", "Enterprise", "Active")' class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-line cursor-pointer">Manage</button>
+                            <button @onclick='() => OpenFreezeModal("Shaukat Khanum Blood Bank")' class="bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-rose-800/50 cursor-pointer">Freeze</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr class="hover:bg-surface2/60 transition-colors">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-vital-500/10 border border-vital-500/25 flex items-center justify-center text-vital-400 font-extrabold text-base shrink-0">🏥</div>
+                            <div>
+                                <p class="font-bold text-white text-sm">Sundas Foundation</p>
+                                <p class="text-[11px] font-mono text-slate-500">License: PB-FSD-4021</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4"><p class="text-slate-200">Faisalabad</p><p class="text-[11px] text-slate-500">Punjab</p></td>
+                    <td class="p-4">
+                        <span class="bg-ice-500/10 text-ice-400 text-[10px] font-extrabold px-2 py-0.5 rounded border border-ice-500/25">Professional</span>
+                        <p class="text-[11px] text-slate-500 mt-1">Renews: Oct 02, 2026</p>
+                    </td>
+                    <td class="p-4 text-center"><span class="text-vital-400 font-extrabold text-sm">189</span><p class="text-[10px] text-slate-500">Units in Stock</p></td>
+                    <td class="p-4">
+                        <span class="bg-vital-500/10 text-vital-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-vital-500/25 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-vital-500"></span> Active</span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button @onclick='() => OpenManageModal("Sundas Foundation", "PB-FSD-4021", "Professional", "Active")' class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-line cursor-pointer">Manage</button>
+                            <button @onclick='() => OpenFreezeModal("Sundas Foundation")' class="bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-rose-800/50 cursor-pointer">Freeze</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Row 3 (Suspended) -->
+                <tr class="hover:bg-surface2/60 transition-colors bg-rose-950/10">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 font-extrabold text-base shrink-0">🚫</div>
+                            <div>
+                                <p class="font-bold text-white text-sm">Al-Razi Blood Lab & Care</p>
+                                <p class="text-[11px] font-mono text-slate-500">License: SD-KHI-0199</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4"><p class="text-slate-200">Karachi</p><p class="text-[11px] text-slate-500">Sindh</p></td>
+                    <td class="p-4">
+                        <span class="bg-surface3 text-slate-400 text-[10px] font-extrabold px-2 py-0.5 rounded border border-line">Standard</span>
+                        <p class="text-[11px] text-rose-400 mt-1 font-bold">Payment Overdue</p>
+                    </td>
+                    <td class="p-4 text-center"><span class="text-slate-500 font-extrabold text-sm">0</span><p class="text-[10px] text-slate-500">Frozen</p></td>
+                    <td class="p-4">
+                        <span class="bg-rose-500/10 text-rose-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-rose-500/25 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Suspended</span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button @onclick='() => OpenManageModal("Al-Razi Blood Lab & Care", "SD-KHI-0199", "Standard", "Suspended")' class="bg-surface3 hover:bg-line text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-line cursor-pointer">Manage</button>
+                            <button class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-emerald-800/50 cursor-pointer">Unfreeze</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="p-4 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <p>Showing <span class="font-bold text-white">1</span> to <span class="font-bold text-white">3</span> of <span class="font-bold text-white">48</span> Centers</p>
+        <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 bg-surface3 rounded-lg text-slate-500 cursor-not-allowed" disabled>Previous</button>
+            <button class="px-3 py-1.5 bg-blood-700 text-white font-bold rounded-lg cursor-pointer">1</button>
+            <button class="px-3 py-1.5 bg-surface3 hover:bg-line text-slate-200 rounded-lg cursor-pointer">2</button>
+            <button class="px-3 py-1.5 bg-surface3 hover:bg-line text-slate-200 rounded-lg cursor-pointer">Next</button>
+        </div>
+    </div>
+</div>
+
+<!-- MANAGE CENTER MODAL -->
+@if (isManageModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-surface3 text-white text-base">🏢</span>
+                    <div>
+                        <h3 class="text-base font-bold text-white">@modalCenterName</h3>
+                        <p class="text-xs font-mono text-slate-400">License: @modalLicenseNo</p>
+                    </div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="grid grid-cols-2 gap-3 bg-ink p-4 rounded-xl border border-line">
+                    <div><span class="text-slate-500 text-[10px] uppercase font-bold">Current Plan</span><p class="text-ice-400 font-extrabold text-sm mt-0.5">@modalTier</p></div>
+                    <div><span class="text-slate-500 text-[10px] uppercase font-bold">Account Status</span><p class="text-vital-400 font-bold text-xs mt-0.5">@modalStatus</p></div>
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-slate-400 font-bold">Update SaaS Plan Tier</label>
+                    <select class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blood-500">
+                        <option value="standard">Standard Tier (PKR 25,000/yr)</option>
+                        <option value="professional">Professional Tier (PKR 45,000/yr)</option>
+                        <option value="enterprise" selected>Enterprise Tier (PKR 85,000/yr)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Administrative Remarks</label>
+                    <textarea rows="2" placeholder="Notes on plan upgrade, license renewals, or contact changes..." class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blood-500"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-blood-600 hover:bg-blood-700 text-white font-bold text-xs shadow-md cursor-pointer">Save Center Settings</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- FREEZE / SUSPEND MODAL -->
+@if (isFreezeModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-rose-500/10 text-rose-400 text-base">⚠️</span>
+                    <div><h3 class="text-base font-bold text-white">Freeze Center Account</h3><p class="text-xs text-slate-400">Center: @modalCenterName</p></div>
+                </div>
+                <button @onclick="CloseModals" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="p-4 bg-rose-500/10 border border-rose-500/25 rounded-xl space-y-1">
+                    <p class="font-bold text-rose-300">Warning</p>
+                    <p class="text-slate-300">Freezing this account will immediately disable login access for center staff and hide their blood inventory from global emergency searches.</p>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1">Reason for Suspension</label>
+                    <select class="w-full bg-ink border border-line rounded-xl p-3 text-slate-200 focus:outline-none focus:border-rose-500">
+                        <option>SaaS Subscription Payment Overdue</option>
+                        <option>Expired Provincial Health Regulatory License</option>
+                        <option>Compliance Violation / Reported Quality Issues</option>
+                        <option>Temporary Suspension requested by Center</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button @onclick="CloseModals" class="px-4 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs shadow-md cursor-pointer">Confirm Account Freeze</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isManageModalOpen = false;
+    private bool isFreezeModalOpen = false;
+
+    private string modalCenterName = "";
+    private string modalLicenseNo = "";
+    private string modalTier = "";
+    private string modalStatus = "";
+
+    private void CloseModals()
+    {
+        isManageModalOpen = false;
+        isFreezeModalOpen = false;
+    }
+
+    private void OpenManageModal(string name, string license, string tier, string status)
+    {
+        modalCenterName = name;
+        modalLicenseNo = license;
+        modalTier = tier;
+        modalStatus = status;
+        CloseModals();
+        isManageModalOpen = true;
+    }
+
+    private void OpenFreezeModal(string name)
+    {
+        modalCenterName = name;
+        CloseModals();
+        isFreezeModalOpen = true;
+    }
+}

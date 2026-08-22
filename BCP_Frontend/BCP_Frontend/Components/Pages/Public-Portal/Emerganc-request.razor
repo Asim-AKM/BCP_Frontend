@@ -1,0 +1,173 @@
+﻿@page "/emergency-request"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@using System.ComponentModel.DataAnnotations
+
+<main class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <div class="reveal glass rounded-2xl p-6 sm:p-10 shadow-2xl">
+        <div class="text-center mb-8">
+            <span class="inline-block bg-blood-500/10 text-blood-400 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">
+                Urgent SOS Broadcast
+            </span>
+            <h1 class="font-display text-2xl sm:text-3xl font-bold text-white mt-3">Emergency Request Form</h1>
+            <p class="text-xs sm:text-sm text-slate-400 font-medium mt-1">
+                Instantly alerts nearby donors & connected centers via automated SMS network.
+            </p>
+        </div>
+
+        @if (isSubmittedSuccessfully)
+        {
+            <div class="bg-vital-500/10 text-vital-400 rounded-xl p-6 mb-6 text-center">
+                <span class="text-3xl mb-2 block">✅</span>
+                <h3 class="font-bold text-lg text-white">Broadcast Request Sent Successfully!</h3>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                    Nearby donors and active blood centers in your area have been notified via automated alert. Please keep your contact phone active.
+                </p>
+                <button type="button" @onclick="ResetForm" class="mt-5 bg-surface3 hover:bg-surface2 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer">
+                    Submit Another Request
+                </button>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="requestModel" OnValidSubmit="HandleEmergencyBroadcast" class="space-y-6">
+                <DataAnnotationsValidator />
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Patient Full Name</label>
+                        <InputText @bind-Value="requestModel.PatientName" placeholder="e.g. Zainab Bibi" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.PatientName" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Patient Age</label>
+                        <InputNumber @bind-Value="requestModel.PatientAge" placeholder="e.g. 28" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.PatientAge" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Required Group</label>
+                        <InputSelect @bind-Value="requestModel.BloodGroup" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner">
+                            <option value="O-">O Negative (O-)</option>
+                            <option value="O+">O Positive (O+)</option>
+                            <option value="A-">A Negative (A-)</option>
+                            <option value="A+">A Positive (A+)</option>
+                            <option value="B-">B Negative (B-)</option>
+                            <option value="B+">B Positive (B+)</option>
+                            <option value="AB-">AB Negative (AB-)</option>
+                            <option value="AB+">AB Positive (AB+)</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => requestModel.BloodGroup" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Units Required</label>
+                        <InputNumber @bind-Value="requestModel.UnitsRequired" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.UnitsRequired" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Urgency Level</label>
+                        <InputSelect @bind-Value="requestModel.UrgencyLevel" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner">
+                            <option value="Immediate">Immediate (Within 2 hrs)</option>
+                            <option value="Urgent">Within 12 hrs</option>
+                            <option value="Routine">Routine / Next Day</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => requestModel.UrgencyLevel" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Hospital & Ward</label>
+                        <InputText @bind-Value="requestModel.HospitalAndWard" placeholder="e.g. PIMS Hospital, ICU Ward 3" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.HospitalAndWard" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Attendant Mobile</label>
+                        <InputText @bind-Value="requestModel.AttendantMobile" placeholder="0300-1234567" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.AttendantMobile" class="text-blood-400 text-xs mt-1" />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Case Description</label>
+                    <InputTextArea @bind-Value="requestModel.CaseDescription" rows="3" placeholder="Describe clinical reason (e.g., Surgery, Dengue Platelets)..." class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                    <ValidationMessage For="() => requestModel.CaseDescription" class="text-blood-400 text-xs mt-1" />
+                </div>
+
+                <button type="submit" disabled="@isSubmitting" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
+                    @if (isSubmitting)
+                    {
+                        <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span>Broadcasting SOS Request...</span>
+                    }
+                    else
+                    {
+                        <span>🚨 Send Emergency Broadcast</span>
+                    }
+                </button>
+            </EditForm>
+        }
+    </div>
+</main>
+
+@code {
+    private EmergencyRequestModel requestModel = new();
+    private bool isSubmitting = false;
+    private bool isSubmittedSuccessfully = false;
+
+    private async Task HandleEmergencyBroadcast()
+    {
+        isSubmitting = true;
+        await Task.Delay(1200);
+        isSubmitting = false;
+        isSubmittedSuccessfully = true;
+    }
+
+    private void ResetForm()
+    {
+        requestModel = new EmergencyRequestModel();
+        isSubmittedSuccessfully = false;
+    }
+
+    public class EmergencyRequestModel
+    {
+        [Required(ErrorMessage = "Patient name is required.")]
+        public string PatientName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Patient age is required.")]
+        [Range(1, 120, ErrorMessage = "Please enter a valid age.")]
+        public int? PatientAge { get; set; }
+
+        [Required(ErrorMessage = "Please select a blood group.")]
+        public string BloodGroup { get; set; } = "O-";
+
+        [Required(ErrorMessage = "Units count is required.")]
+        [Range(1, 20, ErrorMessage = "Units must be between 1 and 20.")]
+        public int UnitsRequired { get; set; } = 2;
+
+        [Required(ErrorMessage = "Please select an urgency level.")]
+        public string UrgencyLevel { get; set; } = "Immediate";
+
+        [Required(ErrorMessage = "Hospital name and ward details are required.")]
+        public string HospitalAndWard { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Attendant contact number is required.")]
+        [Phone(ErrorMessage = "Please enter a valid phone number.")]
+        public string AttendantMobile { get; set; } = string.Empty;
+
+        public string? CaseDescription { get; set; }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initPublicPageScript");
+        }
+    }
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+}

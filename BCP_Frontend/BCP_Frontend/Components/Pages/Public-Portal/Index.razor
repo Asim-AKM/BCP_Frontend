@@ -1,0 +1,264 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<main>
+    <!-- HERO SECTION WITH 3D NETWORK ANIMATION -->
+    <section class="relative hero-wash text-white overflow-hidden min-h-[92vh] flex items-center">
+        <!-- Explicit style and wrapper classes to prevent blank screen collapse -->
+        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <canvas id="hero-3d-canvas" class="w-full h-full block" style="width: 100%; height: 100%; display: block;"></canvas>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink/40 to-ink z-[1] pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center py-20">
+            <div class="inline-flex items-center gap-2 glass border border-blood-500/30 text-white text-xs font-bold px-4 py-1.5 rounded-full mb-6">
+                <span class="pulse-dot"></span>
+                24 Active Emergency Appeals Right Now
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold leading-[1.05] mb-6 tracking-tight">
+                Every Drop Counts.<br>
+                <span class="text-gradient-blood">Connecting Patients to Donors, Instantly.</span>
+            </h1>
+
+            <p class="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">
+                Pakistan's centralized, real-time blood management network — linking certified blood banks, active donors, and critical patient requests across the country.
+            </p>
+
+            <!-- SEARCH INVENTORY CARD -->
+            <div class="max-w-4xl mx-auto glass rounded-2xl p-5 sm:p-8 shadow-2xl text-left">
+                <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+                    <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2 font-display"><span>🔍</span> Live Inventory Search</h3>
+                    <span class="text-xs font-semibold text-vital-400 bg-vital-500/10 px-2.5 py-1 rounded-md border border-vital-500/25 flex items-center gap-1.5"><span class="pulse-dot" style="background:#12d6ac"></span>Real-Time Sync</span>
+                </div>
+
+                <EditForm Model="this" OnValidSubmit="HandleSearch" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">City</label>
+                        <InputSelect @bind-Value="SelectedCity" id="city" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="">Select City</option>
+                            <option value="islamabad">Islamabad</option>
+                            <option value="lahore">Lahore</option>
+                            <option value="karachi">Karachi</option>
+                            <option value="peshawar">Peshawar</option>
+                        </InputSelect>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">Blood Group</label>
+                        <InputSelect @bind-Value="SelectedBloodGroup" id="blood-group" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="">Select Group</option>
+                            <option value="A+">A+</option>
+                            <option value="O-">O-</option>
+                            <option value="B+">B+</option>
+                            <option value="AB+">AB+</option>
+                        </InputSelect>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">Component</label>
+                        <InputSelect @bind-Value="SelectedComponent" id="component" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="whole">Whole Blood</option>
+                            <option value="plasma">Plasma</option>
+                            <option value="platelets">Platelets</option>
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-sm py-3.5 px-6 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:brightness-110">
+                            Search Stock
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+
+            <div class="mt-14 flex justify-center scroll-cue">
+                <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <section class="bg-surface border-y border-line py-10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="reveal">
+                <h2 class="font-display text-3xl font-bold text-blood-400"><span data-count-to="12450" data-suffix="+">0</span></h2>
+                <p class="text-xs font-bold text-slate-500 uppercase mt-1">Donors Registered</p>
+            </div>
+            <div class="reveal" style="transition-delay:.05s">
+                <h2 class="font-display text-3xl font-bold text-white"><span data-count-to="185" data-suffix="+">0</span></h2>
+                <p class="text-xs font-bold text-slate-500 uppercase mt-1">Verified Blood Centers</p>
+            </div>
+            <div class="reveal" style="transition-delay:.1s">
+                <h2 class="font-display text-3xl font-bold text-vital-400"><span data-count-to="8920">0</span></h2>
+                <p class="text-xs font-bold text-slate-500 uppercase mt-1">Successful Issuances</p>
+            </div>
+            <div class="reveal" style="transition-delay:.15s">
+                <h2 class="font-display text-3xl font-bold text-white">&lt; 20 Mins</h2>
+                <p class="text-xs font-bold text-slate-500 uppercase mt-1">Avg Emergency Response</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- URGENT CASES -->
+    <section id="urgent-cases" class="py-20 bg-ink">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 reveal">
+                <div>
+                    <span class="text-xs font-black uppercase text-blood-400 tracking-wider">Critical Medical Requests</span>
+                    <h2 class="font-display text-3xl font-bold text-white mt-1">Urgent Patient Appeals</h2>
+                </div>
+                <NavLink href="emergency-request" class="mt-4 sm:mt-0 text-sm font-bold text-blood-400 hover:text-blood-300 flex items-center gap-1">View All Active Appeals &rarr;</NavLink>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="tilt-card reveal bg-surface border border-line rounded-2xl p-6 shadow-xl hover:border-blood-500/40 transition-colors">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80" alt="Patient" class="w-16 h-16 rounded-full object-cover border-2 border-blood-500">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Zainab Bibi</h3>
+                            <p class="text-xs text-slate-400 font-medium">Age: 28 | PIMS Hospital, ISB</p>
+                            <span class="inline-block mt-1 bg-blood-500/10 text-blood-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-blood-500/25">CRITICAL (Needed in 2 hrs)</span>
+                        </div>
+                    </div>
+                    <div class="bg-ink p-3 rounded-xl mb-4 flex justify-between items-center text-sm font-bold border border-line">
+                        <span class="text-slate-400">Required Group:</span>
+                        <span class="text-lg text-blood-400 font-black">O Negative (O-)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-5 leading-relaxed">Emergency surgery requirement. Family requesting urgent volunteer donor arrival at PIMS ICU Ward 3.</p>
+                    <NavLink href="emergency-request" class="block w-full text-center bg-blood-600 hover:bg-blood-700 text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">Respond & Contact Attendant</NavLink>
+                </div>
+
+                <div class="tilt-card reveal bg-surface border border-line rounded-2xl p-6 shadow-xl hover:border-signal-500/40 transition-colors" style="transition-delay:.08s">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Patient" class="w-16 h-16 rounded-full object-cover border-2 border-signal-500">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Muhammad Ali</h3>
+                            <p class="text-xs text-slate-400 font-medium">Age: 45 | Mayo Hospital, LHR</p>
+                            <span class="inline-block mt-1 bg-signal-500/10 text-signal-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-signal-500/25">URGENT (Platelets Needed)</span>
+                        </div>
+                    </div>
+                    <div class="bg-ink p-3 rounded-xl mb-4 flex justify-between items-center text-sm font-bold border border-line">
+                        <span class="text-slate-400">Required Group:</span>
+                        <span class="text-lg text-blood-400 font-black">B Positive (B+)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-5 leading-relaxed">Dengue patient platelet count critically low. Requires 2 mega-units platelets immediately.</p>
+                    <NavLink href="emergency-request" class="block w-full text-center bg-blood-600 hover:bg-blood-700 text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">Respond & Contact Attendant</NavLink>
+                </div>
+
+                <div class="tilt-card reveal bg-surface border border-line rounded-2xl p-6 shadow-xl hover:border-vital-500/40 transition-colors" style="transition-delay:.16s">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Patient" class="w-16 h-16 rounded-full object-cover border-2 border-vital-500">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Baby Ahmed</h3>
+                            <p class="text-xs text-slate-400 font-medium">Age: 4 | Indus Hospital, KHI</p>
+                            <span class="inline-block mt-1 bg-vital-500/10 text-vital-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-vital-500/25">THALASSEMIA (Routine)</span>
+                        </div>
+                    </div>
+                    <div class="bg-ink p-3 rounded-xl mb-4 flex justify-between items-center text-sm font-bold border border-line">
+                        <span class="text-slate-400">Required Group:</span>
+                        <span class="text-lg text-blood-400 font-black">A Positive (A+)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-5 leading-relaxed">Monthly transfusion required for thalassemia patient. Registered donor needed for tomorrow morning.</p>
+                    <NavLink href="emergency-request" class="block w-full text-center bg-blood-600 hover:bg-blood-700 text-white font-bold text-xs py-3 rounded-xl shadow-md transition-all">Respond & Contact Attendant</NavLink>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="py-20 bg-surface border-y border-line">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+            <span class="text-xs font-black uppercase text-blood-400 tracking-wider reveal">Simple Workflow</span>
+            <h2 class="font-display text-3xl font-bold text-white mt-1 mb-16 reveal">How BloodConnect Operates</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <div class="hidden md:block absolute top-8 left-[16.5%] right-[16.5%] vital-pulse" style="height:2px;"></div>
+
+                <div class="reveal p-8 rounded-2xl bg-ink border border-line text-center relative z-10">
+                    <div class="w-16 h-16 bg-blood-500/10 text-blood-400 border border-blood-500/25 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🔍</div>
+                    <h3 class="text-xl font-bold text-white mb-2 font-display">1. Live Stock Search</h3>
+                    <p class="text-slate-400 text-sm">Query synchronized inventory databases across connected partner centers nationwide.</p>
+                </div>
+
+                <div class="reveal p-8 rounded-2xl bg-ink border border-line text-center relative z-10" style="transition-delay:.08s">
+                    <div class="w-16 h-16 bg-signal-500/10 text-signal-400 border border-signal-500/25 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🚨</div>
+                    <h3 class="text-xl font-bold text-white mb-2 font-display">2. Geotargeted Alert</h3>
+                    <p class="text-slate-400 text-sm">When stock is low, emergency broadcasts notify nearby verified blood donors instantly.</p>
+                </div>
+
+                <div class="reveal p-8 rounded-2xl bg-ink border border-line text-center relative z-10" style="transition-delay:.16s">
+                    <div class="w-16 h-16 bg-vital-500/10 text-vital-400 border border-vital-500/25 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🏥</div>
+                    <h3 class="text-xl font-bold text-white mb-2 font-display">3. Verified Issuance</h3>
+                    <p class="text-slate-400 text-sm">Digital authorization receipts ensure quick and authentic blood collection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="py-20 bg-ink">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16 reveal">
+                <span class="text-xs font-black uppercase text-blood-400 tracking-wider">Real Impact</span>
+                <h2 class="font-display text-3xl font-bold text-white mt-1">Donor & Patient Stories</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal bg-surface p-8 rounded-2xl border border-line flex flex-col justify-between">
+                    <p class="text-slate-300 text-sm italic leading-relaxed mb-6">"When my mother was in ICU at Shifa International, we couldn't find O-negative blood anywhere. BloodConnect raised an emergency broadcast, and two donors contacted us within 25 minutes!"</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="w-12 h-12 rounded-full object-cover">
+                        <div><h4 class="font-bold text-white text-sm">Dr. Usman Tariq</h4><p class="text-xs text-slate-500">Islamabad Resident</p></div>
+                    </div>
+                </div>
+                <div class="reveal bg-surface p-8 rounded-2xl border border-line flex flex-col justify-between" style="transition-delay:.08s">
+                    <p class="text-slate-300 text-sm italic leading-relaxed mb-6">"As a regular donor, the SMS alert system makes it super easy to know when a local patient specifically needs B+ blood near my office location."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&q=80" alt="Donor" class="w-12 h-12 rounded-full object-cover">
+                        <div><h4 class="font-bold text-white text-sm">Hamza Shahid</h4><p class="text-xs text-slate-500">Registered Donor (12 Donations)</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="py-20 bg-surface border-t border-line relative overflow-hidden">
+        <div class="absolute inset-0 hero-wash opacity-70"></div>
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 text-center reveal">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Be Ready When Someone Needs You Most.</h2>
+            <p class="text-slate-400 text-sm sm:text-base mb-8 max-w-xl mx-auto">Join Pakistan's largest verified donor network, or bring your blood bank onto the platform in minutes.</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <NavLink href="auth/login" class="bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-bold text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:-translate-y-0.5">Become a Donor</NavLink>
+                <NavLink href="auth/center-register" class="glass text-white font-bold text-sm px-7 py-3.5 rounded-xl transition-all hover:-translate-y-0.5">🏥 Register Your Center</NavLink>
+            </div>
+        </div>
+    </section>
+</main>
+
+@code {
+    public string SelectedCity { get; set; } = "";
+    public string SelectedBloodGroup { get; set; } = "";
+    public string SelectedComponent { get; set; } = "whole";
+
+    private void HandleSearch()
+    {
+        var query = $"search-stock?city={Uri.EscapeDataString(SelectedCity)}&group={Uri.EscapeDataString(SelectedBloodGroup)}&component={Uri.EscapeDataString(SelectedComponent)}";
+        Navigation.NavigateTo(query);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(250);
+            try
+            {
+                await JS.InvokeVoidAsync("initPublicPageScript");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"JS Init Error: {ex.Message}");
+            }
+        }
+    }
+}

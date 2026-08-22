@@ -1,0 +1,223 @@
+﻿@using BCP_Frontend.Components.Layout
+@page "/admin/broadcasts"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+<PageTitle>Emergency Broadcast Monitor — BloodConnect.pk</PageTitle>
+
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h1 class="font-display text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-blood-500 animate-pulse"></span>Emergency Broadcast Monitor
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">National real-time view of every active SOS blood request currently live on the network.</p>
+    </div>
+    <div class="flex items-center gap-3 text-xs">
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Live Now</span>
+            <span class="text-blood-400 font-extrabold text-sm">12</span>
+        </div>
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Resolved Today</span>
+            <span class="text-vital-400 font-extrabold text-sm">38</span>
+        </div>
+        <div class="bg-surface border border-line px-3.5 py-2 rounded-xl text-center">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold">Avg Response</span>
+            <span class="text-white font-extrabold text-sm">18m</span>
+        </div>
+    </div>
+</div>
+
+<!-- Search & Filters Bar -->
+<div class="bg-surface p-4 rounded-2xl border border-line flex flex-col md:flex-row items-center justify-between gap-3">
+    <div class="relative w-full md:w-96">
+        <input type="text" placeholder="Search patient, hospital, or city..." class="w-full bg-ink text-slate-100 text-xs rounded-xl pl-9 pr-4 py-2.5 border border-line focus:outline-none focus:border-blood-500 transition-colors">
+        <svg class="w-4 h-4 text-slate-500 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    </div>
+    <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="">All Urgency Levels</option>
+            <option value="immediate">Immediate</option>
+            <option value="12hr">Within 12 Hrs</option>
+            <option value="routine">Routine</option>
+        </select>
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="">All Blood Groups</option>
+            <option>O-</option>
+            <option>O+</option>
+            <option>A+</option>
+            <option>B+</option>
+            <option>AB-</option>
+        </select>
+        <select class="bg-ink text-slate-300 text-xs rounded-xl px-3 py-2.5 border border-line focus:outline-none focus:border-blood-500">
+            <option value="">All Provinces</option>
+            <option>Punjab</option>
+            <option>Sindh</option>
+            <option>KP</option>
+            <option>ICT</option>
+        </select>
+    </div>
+</div>
+
+<!-- Broadcast Cards Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+    <!-- Card 1 -->
+    <div class="bg-surface rounded-2xl border border-blood-500/25 p-5 space-y-4 hover:border-blood-500/50 transition-colors">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-blood-500/10 border border-blood-500/25 flex items-center justify-center text-blood-400 font-black text-sm shrink-0">O-</div>
+                <div>
+                    <h3 class="font-bold text-white text-sm">Zainab Bibi <span class="text-slate-500 font-medium">· Age 28</span></h3>
+                    <p class="text-[11px] text-slate-400">PIMS Hospital, ICU Ward 3 — Islamabad</p>
+                </div>
+            </div>
+            <span class="bg-blood-500/10 text-blood-400 text-[10px] font-black px-2.5 py-1 rounded-md border border-blood-500/25 flex items-center gap-1.5 shrink-0">
+                <span class="inline-block w-2 h-2 rounded-full bg-blood-500 animate-pulse"></span>IMMEDIATE
+            </span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Units Needed</p><p class="text-white font-bold mt-0.5">3</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Responders</p><p class="text-vital-400 font-bold mt-0.5">4 Notified</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Elapsed</p><p class="text-signal-400 font-bold mt-0.5">14 min</p></div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button @onclick='() => OpenModal("Zainab Bibi", "O-", "PIMS Hospital, ICU Ward 3, Islamabad", "Trauma emergency surgery, 3 units required within 2 hours.")' class="flex-1 bg-surface3 hover:bg-line text-slate-200 text-xs font-bold py-2 rounded-xl border border-line transition-all cursor-pointer">View Full Case</button>
+            <button class="flex-1 bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold py-2 rounded-xl border border-rose-800/50 transition-all cursor-pointer">Escalate Reach</button>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4 hover:border-signal-500/40 transition-colors">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-signal-500/10 border border-signal-500/25 flex items-center justify-center text-signal-400 font-black text-sm shrink-0">B+</div>
+                <div>
+                    <h3 class="font-bold text-white text-sm">Muhammad Ali <span class="text-slate-500 font-medium">· Age 45</span></h3>
+                    <p class="text-[11px] text-slate-400">Lady Reading Hospital — Peshawar</p>
+                </div>
+            </div>
+            <span class="bg-signal-500/10 text-signal-400 text-[10px] font-black px-2.5 py-1 rounded-md border border-signal-500/25 shrink-0">12 HRS</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Units Needed</p><p class="text-white font-bold mt-0.5">2</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Responders</p><p class="text-vital-400 font-bold mt-0.5">2 Notified</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Elapsed</p><p class="text-slate-300 font-bold mt-0.5">42 min</p></div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button @onclick='() => OpenModal("Muhammad Ali", "B+", "Lady Reading Hospital, Peshawar", "Surgical unit requirement, 2 units required within 12 hours.")' class="flex-1 bg-surface3 hover:bg-line text-slate-200 text-xs font-bold py-2 rounded-xl border border-line transition-all cursor-pointer">View Full Case</button>
+            <button class="flex-1 bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold py-2 rounded-xl border border-rose-800/50 transition-all cursor-pointer">Escalate Reach</button>
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4 hover:border-ice-500/40 transition-colors">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-ice-500/10 border border-ice-500/25 flex items-center justify-center text-ice-400 font-black text-sm shrink-0">AB-</div>
+                <div>
+                    <h3 class="font-bold text-white text-sm">Baby Ahmed <span class="text-slate-500 font-medium">· Age 4</span></h3>
+                    <p class="text-[11px] text-slate-400">Indus Hospital — Karachi</p>
+                </div>
+            </div>
+            <span class="bg-ice-500/10 text-ice-400 text-[10px] font-black px-2.5 py-1 rounded-md border border-ice-500/25 shrink-0">ICU CRITICAL</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Units Needed</p><p class="text-white font-bold mt-0.5">1</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Responders</p><p class="text-vital-400 font-bold mt-0.5">6 Notified</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Elapsed</p><p class="text-slate-300 font-bold mt-0.5">1h 02m</p></div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button @onclick='() => OpenModal("Baby Ahmed", "AB-", "Indus Hospital, Karachi", "ICU critical care, thalassemia patient requiring immediate transfusion.")' class="flex-1 bg-surface3 hover:bg-line text-slate-200 text-xs font-bold py-2 rounded-xl border border-line transition-all cursor-pointer">View Full Case</button>
+            <button class="flex-1 bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold py-2 rounded-xl border border-rose-800/50 transition-all cursor-pointer">Escalate Reach</button>
+        </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-surface rounded-2xl border border-line p-5 space-y-4 hover:border-vital-500/40 transition-colors">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-vital-500/10 border border-vital-500/25 flex items-center justify-center text-vital-400 font-black text-sm shrink-0">A+</div>
+                <div>
+                    <h3 class="font-bold text-white text-sm">Fatima Noor <span class="text-slate-500 font-medium">· Age 33</span></h3>
+                    <p class="text-[11px] text-slate-400">Ganga Ram Hospital — Lahore</p>
+                </div>
+            </div>
+            <span class="bg-vital-500/10 text-vital-400 text-[10px] font-black px-2.5 py-1 rounded-md border border-vital-500/25 shrink-0">ROUTINE</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Units Needed</p><p class="text-white font-bold mt-0.5">1</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Responders</p><p class="text-vital-400 font-bold mt-0.5">3 Notified</p></div>
+            <div class="bg-ink p-2 rounded-lg border border-line-soft"><p class="text-slate-500 font-bold uppercase text-[9px]">Elapsed</p><p class="text-slate-300 font-bold mt-0.5">2h 15m</p></div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button @onclick='() => OpenModal("Fatima Noor", "A+", "Ganga Ram Hospital, Lahore", "Scheduled monthly transfusion for chronic anemia management.")' class="flex-1 bg-surface3 hover:bg-line text-slate-200 text-xs font-bold py-2 rounded-xl border border-line transition-all cursor-pointer">View Full Case</button>
+            <button class="flex-1 bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold py-2 rounded-xl border border-rose-800/50 transition-all cursor-pointer">Escalate Reach</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- BROADCAST DETAIL MODAL -->
+@if (isModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden space-y-6 p-6">
+            <div class="flex items-center justify-between border-b border-line pb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="p-2 rounded-xl bg-blood-500/10 text-blood-400 text-base">
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-blood-500 animate-pulse"></span>
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-white">@modalName</h3>
+                        <p class="text-xs text-slate-400">@modalLocation</p>
+                    </div>
+                </div>
+                <button @onclick="CloseModal" class="text-slate-400 hover:text-white text-lg font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="grid grid-cols-2 gap-3 bg-ink p-4 rounded-xl border border-line">
+                    <div>
+                        <span class="text-slate-500 text-[10px] uppercase font-bold">Required Group</span>
+                        <p class="text-blood-400 font-extrabold text-sm mt-0.5">@modalGroup</p>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 text-[10px] uppercase font-bold">Broadcast Radius</span>
+                        <p class="text-slate-200 font-bold text-xs mt-0.5">15 km Geo-fence</p>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-slate-500 text-[10px] uppercase font-bold">Case Description</span>
+                    <p class="text-slate-300 mt-1 bg-ink p-3 rounded-lg border border-line-soft">@modalDesc</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-line pt-4">
+                <button @onclick="CloseModal" class="px-4 py-2 rounded-xl bg-surface3 hover:bg-line text-slate-300 font-bold text-xs cursor-pointer">Close</button>
+                <button @onclick="CloseModal" class="px-4 py-2 rounded-xl bg-blood-600 hover:bg-blood-700 text-white font-bold text-xs shadow-md cursor-pointer">Force Re-Broadcast</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isModalOpen = false;
+    private string modalName = "";
+    private string modalGroup = "";
+    private string modalLocation = "";
+    private string modalDesc = "";
+
+    private void OpenModal(string name, string group, string location, string desc)
+    {
+        modalName = name;
+        modalGroup = group;
+        modalLocation = location;
+        modalDesc = desc;
+        isModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalOpen = false;
+    }
+}
