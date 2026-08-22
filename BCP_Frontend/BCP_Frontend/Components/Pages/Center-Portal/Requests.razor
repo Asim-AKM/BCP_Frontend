@@ -1,0 +1,113 @@
+﻿@page "/center/requests"
+@layout CenterLayout
+@rendermode InteractiveServer
+
+<!-- Header Banner -->
+<div class="bg-surface rounded-2xl p-4 sm:p-6 border border-line">
+    <span class="text-[11px] font-extrabold text-blood-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-blood-500 animate-ping"></span> Live Broadcast System
+    </span>
+    <h1 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">Incoming Emergency Requests</h1>
+</div>
+
+<!-- Emergency Requests Cards Container -->
+<div class="space-y-4">
+    @if (requests.Count == 0)
+    {
+        <div class="bg-surface rounded-2xl border border-line p-8 text-center text-slate-400 font-semibold text-xs">
+            No active emergency broadcasts at the moment.
+        </div>
+    }
+    else
+    {
+        @foreach (var req in requests)
+        {
+            <div class="bg-surface rounded-2xl @(req.IsUrgent ? "border-2 border-blood-500/30" : "border border-line") p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="@(req.IsUrgent ? "bg-blood-600" : "bg-blood-700") text-white font-extrabold text-xs px-2.5 py-0.5 rounded-md">
+                            @req.BloodGroup
+                        </span>
+                        @if (req.IsUrgent)
+                        {
+                            <span class="bg-blood-500/10 text-blood-400 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border border-blood-500/25">
+                                URGENT (@req.UnitsRequested Units)
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="bg-surface3 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border border-line">
+                                Normal (@req.UnitsRequested Unit)
+                            </span>
+                        }
+                    </div>
+                    <p class="font-extrabold text-white text-base">@req.HospitalName</p>
+                    <p class="text-xs text-slate-400 font-semibold">
+                        Attending: @req.AttendingDoctor | Contact: @req.ContactNumber | Requested @req.RequestedTimeAgo
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button @onclick="() => AcceptRequest(req)" class="flex-1 sm:flex-none bg-vital-500 hover:bg-vital-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all cursor-pointer">
+                        Accept & Reserve Bag
+                    </button>
+                    <button @onclick="() => DeclineRequest(req)" class="flex-1 sm:flex-none bg-surface3 hover:bg-line text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">
+                        Decline
+                    </button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private List<EmergencyRequestModel> requests = new()
+    {
+        new EmergencyRequestModel
+        {
+            Id = 1,
+            BloodGroup = "O Negative (O-)",
+            UnitsRequested = 2,
+            IsUrgent = true,
+            HospitalName = "PIMS Hospital (ICU Ward 4)",
+            AttendingDoctor = "Dr. Tariq",
+            ContactNumber = "0300-5551234",
+            RequestedTimeAgo = "15 mins ago"
+        },
+        new EmergencyRequestModel
+        {
+            Id = 2,
+            BloodGroup = "B Positive (B+)",
+            UnitsRequested = 1,
+            IsUrgent = false,
+            HospitalName = "Kulsum International Hospital",
+            AttendingDoctor = "Dr. Naveed",
+            ContactNumber = "0321-9988776",
+            RequestedTimeAgo = "1 hour ago"
+        }
+    };
+
+    private void AcceptRequest(EmergencyRequestModel request)
+    {
+        // Handle logic for reserving stock bag & dispatch
+        requests.Remove(request);
+    }
+
+    private void DeclineRequest(EmergencyRequestModel request)
+    {
+        // Handle logic for declining broadcast
+        requests.Remove(request);
+    }
+
+    public class EmergencyRequestModel
+    {
+        public int Id { get; set; }
+        public string BloodGroup { get; set; } = string.Empty;
+        public int UnitsRequested { get; set; }
+        public bool IsUrgent { get; set; }
+        public string HospitalName { get; set; } = string.Empty;
+        public string AttendingDoctor { get; set; } = string.Empty;
+        public string ContactNumber { get; set; } = string.Empty;
+        public string RequestedTimeAgo { get; set; } = string.Empty;
+    }
+}

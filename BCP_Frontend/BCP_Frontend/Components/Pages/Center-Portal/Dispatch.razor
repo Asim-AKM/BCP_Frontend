@@ -1,0 +1,235 @@
+﻿@page "/center/dispatch"
+@layout CenterLayout
+@rendermode InteractiveServer
+
+<!-- Header Banner -->
+<div class="bg-surface rounded-2xl p-4 sm:p-6 border border-line flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div>
+        <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Patient Records & Bag Tracking</span>
+        <h1 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">Blood Issuance & Dispatch Log</h1>
+    </div>
+    <button @onclick="OpenIssueModal" class="w-full md:w-auto bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-lg shadow-blood-950/40 transition-all flex items-center justify-center gap-2 cursor-pointer">
+        <span>+</span> Issue Blood Bag
+    </button>
+</div>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-surface p-4 rounded-2xl border border-line">
+        <p class="text-xs font-bold text-slate-500 uppercase">Total Issued (This Month)</p>
+        <p class="font-display text-2xl font-bold text-white mt-1">142 Units</p>
+    </div>
+    <div class="bg-surface p-4 rounded-2xl border border-line">
+        <p class="text-xs font-bold text-slate-500 uppercase">Emergency Dispatches</p>
+        <p class="font-display text-2xl font-bold text-blood-400 mt-1">38 Units</p>
+    </div>
+    <div class="bg-surface p-4 rounded-2xl border border-line">
+        <p class="text-xs font-bold text-slate-500 uppercase">Cross-Matched Verified</p>
+        <p class="font-display text-2xl font-bold text-vital-400 mt-1">100%</p>
+    </div>
+</div>
+
+<!-- Search & Filter Bar -->
+<div class="bg-surface rounded-2xl border border-line p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+    <div class="w-full sm:w-72">
+        <input type="text" @bind="searchTerm" @bind:event="oninput" placeholder="Search patient name, bag serial..." class="w-full bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl px-3.5 py-2.5 outline-none focus:border-blood-500" />
+    </div>
+    <div class="flex gap-2 w-full sm:w-auto">
+        <select @bind="selectedGroupFilter" class="bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl px-3 py-2.5 outline-none focus:border-blood-500 flex-1 sm:flex-none">
+            <option value="">All Blood Groups</option>
+            <option value="A+">A+</option>
+            <option value="O-">O-</option>
+            <option value="B+">B+</option>
+        </select>
+        <select @bind="selectedStatusFilter" class="bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl px-3 py-2.5 outline-none focus:border-blood-500 flex-1 sm:flex-none">
+            <option value="">All Statuses</option>
+            <option value="Dispatched">Dispatched</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Reserved">Reserved</option>
+        </select>
+    </div>
+</div>
+
+<!-- Dispatch History Table -->
+<div class="bg-surface rounded-2xl border border-line p-4 sm:p-6">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-medium border-collapse min-w-[700px]">
+            <thead>
+                <tr class="border-b border-line text-slate-500 font-bold uppercase tracking-wider">
+                    <th class="py-3 px-2">Bag Serial ID</th>
+                    <th class="py-3 px-2">Patient Details</th>
+                    <th class="py-3 px-2">Group & Component</th>
+                    <th class="py-3 px-2">Hospital / Clinic</th>
+                    <th class="py-3 px-2">Date & Time</th>
+                    <th class="py-3 px-2">Status</th>
+                    <th class="py-3 px-2 text-right">Receipt</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-line text-slate-300 font-semibold">
+                @foreach (var item in FilteredDispatches)
+                {
+                    <tr>
+                        <td class="py-4 px-2 font-mono text-blood-400 font-bold">@item.BagSerial</td>
+                        <td class="py-4 px-2">
+                            <p class="font-bold text-white">@item.PatientName</p>
+                            <p class="text-[10px] text-slate-500">MRN: @item.MrnNo</p>
+                        </td>
+                        <td class="py-4 px-2">
+                            <span class="font-extrabold text-blood-400">@item.BloodGroup</span>
+                            <p class="text-[10px] text-slate-500">@item.Component (@item.Units Unit)</p>
+                        </td>
+                        <td class="py-4 px-2">@item.HospitalName</td>
+                        <td class="py-4 px-2 text-slate-500">@item.DispatchedAt</td>
+                        <td class="py-4 px-2">
+                            @if (item.Status == "Dispatched")
+                            {
+                                <span class="bg-vital-500/10 text-vital-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-vital-500/25">Dispatched</span>
+                            }
+                            else if (item.Status == "In Transit")
+                            {
+                                <span class="bg-signal-500/10 text-signal-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-signal-500/25">In Transit</span>
+                            }
+                        </td>
+                        <td class="py-4 px-2 text-right">
+                            <button @onclick="() => PrintVoucher(item)" class="bg-surface3 hover:bg-line text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[11px] transition-colors border border-line cursor-pointer">
+                                Print Voucher
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Issue Blood Bag Modal -->
+@if (isIssueModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-surface border border-line rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-line pb-3 mb-4">
+                <h3 class="font-bold text-white text-base">Issue Blood Bag to Patient</h3>
+                <button @onclick="CloseIssueModal" class="text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+            </div>
+            <EditForm Model="@issueModel" OnValidSubmit="HandleIssueSubmit" class="space-y-4">
+                <DataAnnotationsValidator />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Patient Full Name</label>
+                        <InputText @bind-Value="issueModel.PatientName" required placeholder="Ali Imran" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500" />
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Hospital / MRN No.</label>
+                        <InputText @bind-Value="issueModel.MrnNo" required placeholder="MRN-9021" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Required Blood Group</label>
+                        <InputSelect @bind-Value="issueModel.BloodGroup" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="O-">O Negative (O-)</option>
+                            <option value="A+">A Positive (A+)</option>
+                            <option value="B+">B Positive (B+)</option>
+                            <option value="AB+">AB Positive (AB+)</option>
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Component Type</label>
+                        <InputSelect @bind-Value="issueModel.Component" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="Whole Blood">Whole Blood</option>
+                            <option value="Packed Red Cells">Packed Red Cells</option>
+                            <option value="Platelets">Platelets</option>
+                            <option value="Plasma">Plasma</option>
+                        </InputSelect>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Select Available Bag Serial</label>
+                    <InputSelect @bind-Value="issueModel.BagSerial" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                        <option value="#BAG-2026-0901">#BAG-2026-0901 (A+ | Exp: Nov 2026)</option>
+                        <option value="#BAG-2026-0905">#BAG-2026-0905 (O- | Exp: Oct 2026)</option>
+                    </InputSelect>
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Attending Doctor / Hospital Name</label>
+                    <InputText @bind-Value="issueModel.HospitalName" placeholder="Dr. Ahmed (PIMS Hospital)" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500" />
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-lg shadow-blood-950/40 transition-all cursor-pointer">
+                    Confirm Dispatch & Deduct Stock
+                </button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isIssueModalOpen = false;
+    private string searchTerm = string.Empty;
+    private string selectedGroupFilter = string.Empty;
+    private string selectedStatusFilter = string.Empty;
+
+    private IssueFormModel issueModel = new();
+
+    private List<DispatchLogModel> dispatches = new()
+    {
+        new DispatchLogModel { BagSerial = "#BAG-2026-0891", PatientName = "Zainab Bibi", MrnNo = "44920-A", BloodGroup = "O Negative (O-)", Component = "Whole Blood", Units = 1, HospitalName = "PIMS Hospital, Islamabad", DispatchedAt = "14 Aug 2026, 02:15 PM", Status = "Dispatched" },
+        new DispatchLogModel { BagSerial = "#BAG-2026-0888", PatientName = "Usman Chaudhry", MrnNo = "33012-D", BloodGroup = "B Positive (B+)", Component = "Platelets", Units = 2, HospitalName = "Shifa International, ISB", DispatchedAt = "14 Aug 2026, 11:30 AM", Status = "Dispatched" },
+        new DispatchLogModel { BagSerial = "#BAG-2026-0882", PatientName = "Fatima Tariq", MrnNo = "11029-B", BloodGroup = "A Positive (A+)", Component = "Plasma", Units = 1, HospitalName = "Holy Family Hospital, RWP", DispatchedAt = "13 Aug 2026, 08:45 PM", Status = "In Transit" }
+    };
+
+    private IEnumerable<DispatchLogModel> FilteredDispatches => dispatches.Where(d =>
+        (string.IsNullOrWhiteSpace(searchTerm) || d.PatientName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || d.BagSerial.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
+        (string.IsNullOrWhiteSpace(selectedGroupFilter) || d.BloodGroup.Contains(selectedGroupFilter)) &&
+        (string.IsNullOrWhiteSpace(selectedStatusFilter) || d.Status.Equals(selectedStatusFilter, StringComparison.OrdinalIgnoreCase))
+    );
+
+    private void OpenIssueModal() => isIssueModalOpen = true;
+    private void CloseIssueModal() => isIssueModalOpen = false;
+
+    private void HandleIssueSubmit()
+    {
+        dispatches.Insert(0, new DispatchLogModel
+        {
+            BagSerial = string.IsNullOrWhiteSpace(issueModel.BagSerial) ? "#BAG-2026-0901" : issueModel.BagSerial,
+            PatientName = issueModel.PatientName,
+            MrnNo = issueModel.MrnNo,
+            BloodGroup = issueModel.BloodGroup,
+            Component = issueModel.Component,
+            Units = 1,
+            HospitalName = string.IsNullOrWhiteSpace(issueModel.HospitalName) ? "Shifa Hospital, ISB" : issueModel.HospitalName,
+            DispatchedAt = DateTime.Now.ToString("dd MMM yyyy, hh:mm tt"),
+            Status = "Dispatched"
+        });
+
+        issueModel = new();
+        CloseIssueModal();
+    }
+
+    private void PrintVoucher(DispatchLogModel item)
+    {
+        // Handle receipt printing logic
+    }
+
+    public class DispatchLogModel
+    {
+        public string BagSerial { get; set; } = string.Empty;
+        public string PatientName { get; set; } = string.Empty;
+        public string MrnNo { get; set; } = string.Empty;
+        public string BloodGroup { get; set; } = string.Empty;
+        public string Component { get; set; } = string.Empty;
+        public int Units { get; set; }
+        public string HospitalName { get; set; } = string.Empty;
+        public string DispatchedAt { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+    }
+
+    public class IssueFormModel
+    {
+        public string PatientName { get; set; } = string.Empty;
+        public string MrnNo { get; set; } = string.Empty;
+        public string BloodGroup { get; set; } = "O-";
+        public string Component { get; set; } = "Whole Blood";
+        public string BagSerial { get; set; } = "#BAG-2026-0901";
+        public string HospitalName { get; set; } = string.Empty;
+    }
+}

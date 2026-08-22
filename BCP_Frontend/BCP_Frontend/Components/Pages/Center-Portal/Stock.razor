@@ -1,0 +1,192 @@
+﻿@page "/center/stock"
+@layout CenterLayout
+@rendermode InteractiveServer
+
+<!-- Header Banner -->
+<div class="bg-surface rounded-2xl p-4 sm:p-6 border border-line flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div>
+        <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Live Inventory</span>
+        <h1 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">Blood Stock & Storage Units</h1>
+    </div>
+    <button @onclick="OpenAddStockModal" class="w-full md:w-auto bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-lg shadow-blood-950/40 transition-all cursor-pointer">
+        + Add Blood Bag Unit
+    </button>
+</div>
+
+<!-- Stock Units Grid Matrix -->
+<div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">A+</p>
+        <p class="font-display text-lg font-bold text-white mt-1">24</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">A-</p>
+        <p class="font-display text-lg font-bold text-white mt-1">05</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">B+</p>
+        <p class="font-display text-lg font-bold text-white mt-1">38</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">B-</p>
+        <p class="font-display text-lg font-bold text-white mt-1">02</p>
+        <span class="text-[9px] font-bold text-signal-400 uppercase">Low</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">O+</p>
+        <p class="font-display text-lg font-bold text-white mt-1">45</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+    <div class="bg-blood-500/5 p-3 rounded-xl border border-blood-500/30 text-center">
+        <p class="text-xs font-black text-blood-400">O-</p>
+        <p class="font-display text-lg font-bold text-blood-400 mt-1">01</p>
+        <span class="text-[9px] font-bold text-blood-400 uppercase">CRITICAL</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">AB+</p>
+        <p class="font-display text-lg font-bold text-white mt-1">12</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+    <div class="bg-surface p-3 rounded-xl border border-line text-center">
+        <p class="text-xs font-black text-blood-400">AB-</p>
+        <p class="font-display text-lg font-bold text-white mt-1">03</p>
+        <span class="text-[9px] font-bold text-slate-500 uppercase">Units</span>
+    </div>
+</div>
+
+<!-- Stock Data Table -->
+<div class="bg-surface rounded-2xl border border-line p-4 sm:p-6">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-medium border-collapse min-w-[650px]">
+            <thead>
+                <tr class="border-b border-line text-slate-500 font-bold uppercase tracking-wider">
+                    <th class="py-3 px-2">Bag Serial</th>
+                    <th class="py-3 px-2">Group & Type</th>
+                    <th class="py-3 px-2">Storage Fridge</th>
+                    <th class="py-3 px-2">Collection Date</th>
+                    <th class="py-3 px-2">Expiry Date</th>
+                    <th class="py-3 px-2 text-right">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-line text-slate-300 font-semibold">
+                @foreach (var item in stockList)
+                {
+                    <tr>
+                        <td class="py-3.5 px-2 font-mono text-blood-400 font-bold">@item.BagSerial</td>
+                        <td class="py-3.5 px-2">@item.GroupAndType</td>
+                        <td class="py-3.5 px-2">@item.StorageLocation</td>
+                        <td class="py-3.5 px-2 text-slate-500">@item.CollectionDate</td>
+                        <td class="py-3.5 px-2 text-slate-500">@item.ExpiryDate</td>
+                        <td class="py-3.5 px-2 text-right">
+                            @if (item.Status == "AVAILABLE")
+                            {
+                                <span class="bg-vital-500/10 text-vital-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-vital-500/25">AVAILABLE</span>
+                            }
+                            else if (item.Status == "RESERVED")
+                            {
+                                <span class="bg-signal-500/10 text-signal-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-signal-500/25">RESERVED</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Stock Modal -->
+@if (isModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-surface border border-line rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-line pb-3 mb-4">
+                <h3 class="font-bold text-white text-base">Add New Blood Bag Unit</h3>
+                <button @onclick="CloseAddStockModal" class="text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+            </div>
+            <EditForm Model="@newBag" OnValidSubmit="HandleAddStock" class="space-y-3">
+                <DataAnnotationsValidator />
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Bag Serial Code</label>
+                    <InputText @bind-Value="newBag.BagSerial" placeholder="#BAG-2026-XXXX" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Blood Group</label>
+                        <InputSelect @bind-Value="newBag.Group" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-400">Component</label>
+                        <InputSelect @bind-Value="newBag.Component" class="w-full mt-1 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="Whole Blood">Whole Blood</option>
+                            <option value="PRBC">PRBC</option>
+                            <option value="Platelets">Platelets</option>
+                            <option value="Plasma">Plasma</option>
+                        </InputSelect>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs py-3 rounded-xl shadow-lg shadow-blood-950/40 mt-2 cursor-pointer">
+                    Add to Storage
+                </button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isModalOpen = false;
+    private BloodBagModel newBag = new();
+
+    private List<StockItem> stockList = new()
+    {
+        new StockItem { BagSerial = "#BAG-2026-0901", GroupAndType = "A Positive (Whole)", StorageLocation = "Fridge A — Compartment 2", CollectionDate = "01 Aug 2026", ExpiryDate = "12 Sep 2026", Status = "AVAILABLE" },
+        new StockItem { BagSerial = "#BAG-2026-0905", GroupAndType = "O Negative (PRBC)", StorageLocation = "Fridge B — Compartment 1", CollectionDate = "10 Aug 2026", ExpiryDate = "21 Sep 2026", Status = "RESERVED" }
+    };
+
+    private void OpenAddStockModal() => isModalOpen = true;
+    private void CloseAddStockModal() => isModalOpen = false;
+
+    private void HandleAddStock()
+    {
+        stockList.Insert(0, new StockItem
+        {
+            BagSerial = string.IsNullOrWhiteSpace(newBag.BagSerial) ? $"#BAG-2026-{new Random().Next(1000, 9999)}" : newBag.BagSerial,
+            GroupAndType = $"{newBag.Group} ({newBag.Component})",
+            StorageLocation = "Fridge A — Compartment 1",
+            CollectionDate = DateTime.Now.ToString("dd MMM yyyy"),
+            ExpiryDate = DateTime.Now.AddDays(35).ToString("dd MMM yyyy"),
+            Status = "AVAILABLE"
+        });
+
+        newBag = new();
+        CloseAddStockModal();
+    }
+
+    public class StockItem
+    {
+        public string BagSerial { get; set; } = string.Empty;
+        public string GroupAndType { get; set; } = string.Empty;
+        public string StorageLocation { get; set; } = string.Empty;
+        public string CollectionDate { get; set; } = string.Empty;
+        public string ExpiryDate { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+    }
+
+    public class BloodBagModel
+    {
+        public string BagSerial { get; set; } = string.Empty;
+        public string Group { get; set; } = "A+";
+        public string Component { get; set; } = "Whole Blood";
+    }
+}
