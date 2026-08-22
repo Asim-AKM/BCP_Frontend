@@ -1,0 +1,166 @@
+﻿@page "/center/billing"
+@layout CenterLayout
+
+<main class="max-w-5xl mx-auto w-full space-y-6">
+    <!-- Header -->
+    <div class="bg-surface rounded-2xl p-4 sm:p-6 border border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Subscription</span>
+            <h1 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">SaaS Billing & Plan Usage</h1>
+        </div>
+        <span class="bg-vital-500/10 text-vital-400 text-xs font-black px-3 py-1.5 rounded-xl uppercase border border-vital-500/25 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-vital-500 animate-pulse"></span>
+            @daysRemaining-Day Free Trial
+        </span>
+    </div>
+
+    <!-- Current Plan Overview -->
+    <div class="bg-gradient-to-br from-surface to-surface2 border border-line text-white rounded-2xl p-6 sm:p-7 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-48 h-48 bg-blood-600/20 rounded-full blur-3xl"></div>
+        <div class="relative z-10 flex flex-col md:flex-row justify-between md:items-center gap-6">
+            <div>
+                <p class="text-xs font-extrabold text-vital-400 uppercase tracking-wider">Current Tier</p>
+                <h2 class="font-display text-2xl font-bold mt-1">@currentPlanName</h2>
+                <p class="text-xs text-slate-400 font-medium mt-1">
+                    Trial ends on <strong class="text-white">28 August 2026</strong> &middot; @daysRemaining days remaining
+                </p>
+            </div>
+            <button @onclick="OpenUpgradeModal" class="bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs px-6 py-3.5 rounded-xl shadow-lg shadow-blood-950/40 transition-all whitespace-nowrap">
+                Upgrade to Annual (PKR 15,000/mo)
+            </button>
+        </div>
+    </div>
+
+    <!-- Plan Usage Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-surface p-5 rounded-2xl border border-line">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Monthly Dispatches</p>
+            <p class="font-display text-2xl font-bold text-white mt-1">142 <span class="text-xs text-slate-500 font-semibold">/ Unlimited</span></p>
+            <div class="w-full h-1.5 bg-ink rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-vital-500 rounded-full" style="width: 38%"></div>
+            </div>
+        </div>
+        <div class="bg-surface p-5 rounded-2xl border border-line">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Staff Seats Used</p>
+            <p class="font-display text-2xl font-bold text-white mt-1">4 <span class="text-xs text-slate-500 font-semibold">/ 10 Seats</span></p>
+            <div class="w-full h-1.5 bg-ink rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-ice-500 rounded-full" style="width: 40%"></div>
+            </div>
+        </div>
+        <div class="bg-surface p-5 rounded-2xl border border-line">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">SMS Broadcast Credits</p>
+            <p class="font-display text-2xl font-bold text-signal-400 mt-1">85 <span class="text-xs text-slate-500 font-semibold">/ 500 Credits</span></p>
+            <div class="w-full h-1.5 bg-ink rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-signal-500 rounded-full" style="width: 17%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="bg-surface rounded-2xl border border-line p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-8 rounded-md bg-surface3 border border-line flex items-center justify-center text-xs font-black text-slate-300">VISA</div>
+            <div>
+                <p class="text-sm font-bold text-white">Corporate Card ending in 4021</p>
+                <p class="text-[11px] text-slate-500">Expires 08/28 &middot; Billed monthly</p>
+            </div>
+        </div>
+        <button class="bg-surface3 hover:bg-line text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl border border-line transition-all">
+            Update Payment Method
+        </button>
+    </div>
+
+    <!-- Payment History -->
+    <div class="bg-surface rounded-2xl border border-line p-5 sm:p-6 space-y-4">
+        <h2 class="font-bold text-white text-sm uppercase tracking-wider border-b border-line pb-3">Billing History & Invoices</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-medium border-collapse">
+                <thead>
+                    <tr class="border-b border-line text-slate-500 font-bold uppercase tracking-wider">
+                        <th class="py-2.5 px-2">Invoice ID</th>
+                        <th class="py-2.5 px-2">Date</th>
+                        <th class="py-2.5 px-2">Amount</th>
+                        <th class="py-2.5 px-2">Status</th>
+                        <th class="py-2.5 px-2 text-right">Invoice</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-line text-slate-300 font-semibold">
+                    @foreach (var invoice in invoices)
+                    {
+                        <tr>
+                            <td class="py-3.5 px-2 font-mono-data text-white">@invoice.InvoiceId</td>
+                            <td class="py-3.5 px-2 text-slate-500">@invoice.Date.ToString("dd MMM yyyy")</td>
+                            <td class="py-3.5 px-2 font-bold text-white">@invoice.Amount</td>
+                            <td class="py-3.5 px-2">
+                                <span class="bg-vital-500/10 text-vital-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-vital-500/25">@invoice.Status</span>
+                            </td>
+                            <td class="py-3.5 px-2 text-right">
+                                <a href="#" class="text-blood-400 hover:text-blood-300 font-bold">Download PDF</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- Upgrade Modal -->
+@if (isUpgradeModalOpen)
+{
+    <div class="fixed inset-0 bg-ink/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-surface border border-line rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-line pb-3 mb-4">
+                <h3 class="font-bold text-white text-base">Upgrade to Annual Plan</h3>
+                <button @onclick="CloseUpgradeModal" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="p-4 bg-vital-500/10 border border-vital-500/25 rounded-xl">
+                    <p class="font-bold text-vital-300">Annual Plan Benefits</p>
+                    <ul class="text-slate-300 mt-1.5 space-y-1 list-disc list-inside">
+                        <li>Unlimited dispatches &amp; staff seats</li>
+                        <li>Priority emergency broadcast placement</li>
+                        <li>2 months free vs monthly billing</li>
+                    </ul>
+                </div>
+                <div class="flex justify-between bg-ink p-3 rounded-xl border border-line font-bold">
+                    <span class="text-slate-400">Total Annual Cost:</span>
+                    <span class="text-white">PKR 1,80,000/yr</span>
+                </div>
+            </div>
+            <EditForm Model="this" OnValidSubmit="HandleUpgradeSubmit">
+                <button type="submit" class="w-full mt-5 bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-lg shadow-blood-950/40 transition-all">
+                    Confirm Upgrade & Pay
+                </button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isUpgradeModalOpen = false;
+    private string currentPlanName = "Professional Center Tier";
+    private int daysRemaining = 14;
+
+    private List<InvoiceModel> invoices = new()
+    {
+        new InvoiceModel { InvoiceId = "#INV-2026-001", Date = new DateTime(2026, 8, 14), Amount = "PKR 0 (Trial)", Status = "PAID" }
+    };
+
+    private void OpenUpgradeModal() => isUpgradeModalOpen = true;
+    private void CloseUpgradeModal() => isUpgradeModalOpen = false;
+
+    private void HandleUpgradeSubmit()
+    {
+        currentPlanName = "Annual Enterprise Tier";
+        isUpgradeModalOpen = false;
+    }
+
+    public class InvoiceModel
+    {
+        public string InvoiceId { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public string Amount { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+    }
+}

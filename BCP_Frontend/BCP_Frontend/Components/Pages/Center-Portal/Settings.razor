@@ -1,0 +1,139 @@
+﻿@page "/center/settings"
+@layout CenterLayout
+
+<!-- Header Action Banner -->
+<div class="bg-surface rounded-2xl p-4 sm:p-6 border border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div>
+        <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">System & Profile</span>
+        <h1 class="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">Center Settings & Configuration</h1>
+    </div>
+    <button @onclick="SaveAllSettings" class="w-full sm:w-auto bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-lg shadow-blood-950/40 transition-all flex items-center justify-center gap-2">
+        <span>💾</span> Save Changes
+    </button>
+</div>
+
+@if (showSuccessAlert)
+{
+    <div class="bg-vital-500/10 border border-vital-500/25 text-vital-400 px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-between">
+        <span>Settings updated successfully!</span>
+        <button @onclick="() => showSuccessAlert = false" class="text-vital-400 hover:text-white">&times;</button>
+    </div>
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Center Profile Info -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-surface rounded-2xl border border-line p-4 sm:p-6 space-y-4">
+            <h2 class="font-display text-base font-bold text-white border-b border-line pb-3">Hospital / Blood Bank Details</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Center Name</label>
+                    <input type="text" @bind="settings.CenterName" class="w-full mt-1.5 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-colors" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">License / Code</label>
+                    <input type="text" @bind="settings.CenterCode" disabled class="w-full mt-1.5 bg-surface2 border border-line text-xs font-mono text-slate-400 rounded-xl p-3 cursor-not-allowed" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Primary Email</label>
+                    <input type="email" @bind="settings.Email" class="w-full mt-1.5 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-colors" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-400">Contact Phone</label>
+                    <input type="tel" @bind="settings.Phone" class="w-full mt-1.5 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-colors" />
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold uppercase text-slate-400">Address & Location</label>
+                <textarea @bind="settings.Address" rows="2" class="w-full mt-1.5 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-colors resize-none"></textarea>
+            </div>
+        </div>
+
+        <!-- Notification & Emergency Alerts -->
+        <div class="bg-surface rounded-2xl border border-line p-4 sm:p-6 space-y-4">
+            <h2 class="font-display text-base font-bold text-white border-b border-line pb-3">Alert & Broadcast Preferences</h2>
+
+            <div class="flex items-center justify-between py-2">
+                <div>
+                    <p class="text-xs font-bold text-white">Emergency Broadcasts</p>
+                    <p class="text-[11px] text-slate-500">Receive instant alerts for urgent blood group requests nearby.</p>
+                </div>
+                <button @onclick="() => settings.EnableEmergencyAlerts = !settings.EnableEmergencyAlerts"
+                        class="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-200 @(settings.EnableEmergencyAlerts ? "bg-blood-600 justify-end" : "bg-surface3 justify-start")">
+                    <span class="w-4 h-4 rounded-full bg-white shadow-md"></span>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between py-2 border-t border-line">
+                <div>
+                    <p class="text-xs font-bold text-white">Stock Expiry Warnings</p>
+                    <p class="text-[11px] text-slate-500">Send notifications 5 days before blood units expire.</p>
+                </div>
+                <button @onclick="() => settings.EnableStockExpiryAlerts = !settings.EnableStockExpiryAlerts"
+                        class="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-200 @(settings.EnableStockExpiryAlerts ? "bg-blood-600 justify-end" : "bg-surface3 justify-start")">
+                    <span class="w-4 h-4 rounded-full bg-white shadow-md"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security & Account Info Side Panel -->
+    <div class="space-y-6">
+        <div class="bg-surface rounded-2xl border border-line p-4 sm:p-6 space-y-4">
+            <h2 class="font-display text-base font-bold text-white border-b border-line pb-3">Administrator Account</h2>
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-surface3 border border-line flex items-center justify-center font-bold text-slate-200 text-sm">SK</div>
+                <div>
+                    <p class="text-xs font-bold text-white">Dr. Sarah Khan</p>
+                    <p class="text-[10px] text-slate-500">Super Administrator</p>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="text-xs font-bold uppercase text-slate-400">Update Password</label>
+                <input type="password" placeholder="New Password" class="w-full mt-1.5 bg-ink border border-line text-xs font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 transition-colors" />
+            </div>
+
+            <button class="w-full bg-surface2 hover:bg-surface3 text-white border border-line font-bold text-xs py-2.5 rounded-xl transition-all">
+                Change Password
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool showSuccessAlert = false;
+
+    private SettingsModel settings = new()
+    {
+        CenterName = "Shifa Hospital Blood Bank",
+        CenterCode = "ISB-MAIN-01",
+        Email = "admin@shifahospital.org",
+        Phone = "+92 51 1234567",
+        Address = "Sector H-8/4, Pitras Bukhari Road, Islamabad",
+        EnableEmergencyAlerts = true,
+        EnableStockExpiryAlerts = true
+    };
+
+    private void SaveAllSettings()
+    {
+        showSuccessAlert = true;
+    }
+
+    public class SettingsModel
+    {
+        public string CenterName { get; set; } = string.Empty;
+        public string CenterCode { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public bool EnableEmergencyAlerts { get; set; }
+        public bool EnableStockExpiryAlerts { get; set; }
+    }
+}
