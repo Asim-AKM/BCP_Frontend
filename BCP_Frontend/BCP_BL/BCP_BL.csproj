@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AuthService\" />
+    <Folder Include="BloodCenterServices\" />
+    <Folder Include="AdminService\" />
+    <Folder Include="PublicServices\" />
+    <Folder Include="UsermanamengService\" />
+    <Folder Include="Shared\" />
+  </ItemGroup>
+
 </Project>
