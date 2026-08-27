@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="BCP_BL/BCP_BL.csproj" Id="6c7bb613-facf-4336-87d6-5023ccf62040" />
   <Project Path="BCP_Frontend/BCP_Frontend.csproj" />
 </Solution>
