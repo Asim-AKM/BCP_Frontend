@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BCP_BL\BCP_BL.csproj" />
+  </ItemGroup>
+
 </Project>
