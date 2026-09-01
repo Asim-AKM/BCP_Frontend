@@ -27,33 +27,54 @@
             </p>
 
             <!-- SEARCH INVENTORY CARD -->
-            <div class="max-w-4xl mx-auto glass rounded-2xl p-5 sm:p-8 shadow-2xl text-left">
+            <div class="max-w-5xl mx-auto glass rounded-2xl p-5 sm:p-8 shadow-2xl text-left">
                 <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                     <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2 font-display"><span>🔍</span> Live Inventory Search</h3>
                     <span class="text-xs font-semibold text-vital-400 bg-vital-500/10 px-2.5 py-1 rounded-md border border-vital-500/25 flex items-center gap-1.5"><span class="pulse-dot" style="background:#12d6ac"></span>Real-Time Sync</span>
                 </div>
 
-                <EditForm Model="this" OnValidSubmit="HandleSearch" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                <EditForm Model="this" OnValidSubmit="HandleSearch" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                    <!-- PROVINCE / REGION DROPDOWN -->
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold uppercase text-slate-400">City</label>
-                        <InputSelect @bind-Value="SelectedCity" id="city" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
-                            <option value="">Select City</option>
-                            <option value="islamabad">Islamabad</option>
-                            <option value="lahore">Lahore</option>
-                            <option value="karachi">Karachi</option>
-                            <option value="peshawar">Peshawar</option>
+                        <label class="text-xs font-bold uppercase text-slate-400">Province / Region</label>
+                        <InputSelect Value="SelectedProvince" ValueExpression="() => SelectedProvince" ValueChanged="(string val) => OnProvinceChanged(val)" id="province" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                            <option value="">Select Province</option>
+                            @foreach (var province in ProvinceCitiesMap.Keys)
+                            {
+                                <option value="@province">@province</option>
+                            }
                         </InputSelect>
                     </div>
+
+                    <!-- CITY DROPDOWN (DYNAMICALLY FILTERED) -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">City</label>
+                        <InputSelect @bind-Value="SelectedCity" disabled="@(string.IsNullOrEmpty(SelectedProvince))" id="city" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <option value="">Select City</option>
+                            @foreach (var city in AvailableCities)
+                            {
+                                <option value="@city.ToLower()">@city</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <!-- BLOOD GROUP DROPDOWN -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-bold uppercase text-slate-400">Blood Group</label>
                         <InputSelect @bind-Value="SelectedBloodGroup" id="blood-group" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
                             <option value="">Select Group</option>
                             <option value="A+">A+</option>
-                            <option value="O-">O-</option>
+                            <option value="A-">A-</option>
                             <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
                             <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
                         </InputSelect>
                     </div>
+
+                    <!-- COMPONENT DROPDOWN -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-bold uppercase text-slate-400">Component</label>
                         <InputSelect @bind-Value="SelectedComponent" id="component" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
@@ -62,8 +83,10 @@
                             <option value="platelets">Platelets</option>
                         </InputSelect>
                     </div>
+
+                    <!-- SUBMIT BUTTON -->
                     <div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-sm py-3.5 px-6 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:brightness-110">
+                        <button type="submit" class="w-full bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-blood-950/50 transition-all hover:brightness-110">
                             Search Stock
                         </button>
                     </div>
@@ -236,13 +259,42 @@
 </main>
 
 @code {
+    public string SelectedProvince { get; set; } = "";
     public string SelectedCity { get; set; } = "";
     public string SelectedBloodGroup { get; set; } = "";
     public string SelectedComponent { get; set; } = "whole";
 
+    private List<string> AvailableCities = new();
+
+    private readonly Dictionary<string, List<string>> ProvinceCitiesMap = new()
+    {
+        { "Federal Capital", new List<string> { "Islamabad" } },
+        { "Punjab", new List<string> { "Lahore", "Rawalpindi", "Faisalabad", "Multan", "Gujranwala", "Sialkot", "Bahawalpur", "Sargodha" } },
+        { "Sindh", new List<string> { "Karachi", "Hyderabad", "Sukkur", "Larkana", "Nawabshah" } },
+        { "Khyber Pakhtunkhwa", new List<string> { "Peshawar", "Mardan", "Abbottabad", "Swat", "Dera Ismail Khan", "Kohat" } },
+        { "Balochistan", new List<string> { "Quetta", "Gwadar", "Turbat", "Khuzdar" } },
+        { "Gilgit-Baltistan", new List<string> { "Gilgit", "Skardu" } },
+        { "Azad Kashmir", new List<string> { "Muzaffarabad", "Mirpur" } }
+    };
+
+    private void OnProvinceChanged(string province)
+    {
+        SelectedProvince = province;
+        SelectedCity = ""; // Reset city selection
+
+        if (!string.IsNullOrEmpty(province) && ProvinceCitiesMap.ContainsKey(province))
+        {
+            AvailableCities = ProvinceCitiesMap[province];
+        }
+        else
+        {
+            AvailableCities.Clear();
+        }
+    }
+
     private void HandleSearch()
     {
-        var query = $"search-stock?city={Uri.EscapeDataString(SelectedCity)}&group={Uri.EscapeDataString(SelectedBloodGroup)}&component={Uri.EscapeDataString(SelectedComponent)}";
+        var query = $"search-stock?province={Uri.EscapeDataString(SelectedProvince)}&city={Uri.EscapeDataString(SelectedCity)}&group={Uri.EscapeDataString(SelectedBloodGroup)}&component={Uri.EscapeDataString(SelectedComponent)}";
         Navigation.NavigateTo(query);
     }
 

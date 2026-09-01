@@ -1,9 +1,11 @@
 ﻿@page "/auth/center-register"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
 
-<main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <!-- Wizard Header -->
+<main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full text-slate-100 font-sans">
+    <!-- Header Section -->
     <div class="text-center mb-10">
         <span class="bg-vital-500/10 text-vital-400 border border-vital-500/25 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">
             🎁 14-Day Free Trial Included
@@ -17,199 +19,623 @@
         <div class="flex items-center justify-between text-xs font-extrabold text-slate-400">
             <div class="flex items-center gap-2 @(currentStep >= 1 ? "text-blood-400" : "text-slate-500")">
                 <span class="w-7 h-7 rounded-full @(currentStep >= 1 ? "bg-blood-500 text-white" : "bg-surface2 text-slate-400") flex items-center justify-center text-xs">1</span>
-                <span class="hidden sm:inline">Admin Account</span>
+                <span class="hidden sm:inline">Admin User</span>
             </div>
             <div class="h-0.5 flex-1 bg-line mx-3"></div>
             <div class="flex items-center gap-2 @(currentStep >= 2 ? "text-blood-400" : "text-slate-500")">
                 <span class="w-7 h-7 rounded-full @(currentStep >= 2 ? "bg-blood-500 text-white" : "bg-surface2 text-slate-400") flex items-center justify-center text-xs">2</span>
-                <span class="hidden sm:inline">Center Details</span>
+                <span class="hidden sm:inline">Blood Center Details</span>
             </div>
             <div class="h-0.5 flex-1 bg-line mx-3"></div>
             <div class="flex items-center gap-2 @(currentStep >= 3 ? "text-blood-400" : "text-slate-500")">
                 <span class="w-7 h-7 rounded-full @(currentStep >= 3 ? "bg-blood-500 text-white" : "bg-surface2 text-slate-400") flex items-center justify-center text-xs">3</span>
-                <span class="hidden sm:inline">Select SaaS Plan</span>
+                <span class="hidden sm:inline">SaaS Plan & Review</span>
             </div>
         </div>
     </div>
 
-    <!-- Registration Card Wrapper -->
+    <!-- Main Card Wrapper -->
     <div class="bg-surface rounded-2xl p-6 sm:p-10 shadow-xl border border-line">
-        <EditForm Model="registrationModel" OnValidSubmit="HandleRegistration">
-            
-            <!-- SECTION 1: Admin Credentials -->
-            @if (currentStep == 1)
-            {
-                <div class="space-y-6">
-                    <h2 class="text-lg font-bold text-white border-b border-line pb-3">Step 1: Administrator Credentials</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Admin Full Name</label>
-                            <input type="text" required placeholder="Dr. Sarah Khan" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Official Email</label>
-                            <input type="email" required placeholder="admin@shifahospital.org" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Password</label>
-                            <input type="password" required placeholder="••••••••" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Confirm Password</label>
-                            <input type="password" required placeholder="••••••••" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                    </div>
-                    <button type="button" @onclick="@(() => ChangeStep(2))" class="w-full bg-blood-600 hover:bg-blood-700 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-blood-900/40 transition-all cursor-pointer">
-                        Next: Center Information &rarr;
+        @if (isSubmittedSuccess)
+        {
+            <div class="text-center py-8 space-y-4">
+                <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center text-3xl mx-auto">
+                    ✓
+                </div>
+                <h2 class="text-2xl font-bold text-white">Application Submitted!</h2>
+                <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                    Your center registration and admin account payload have been logged successfully and sent for approval.
+                </p>
+
+                <div class="bg-surface2 p-4 rounded-xl border border-line text-xs max-w-md mx-auto text-left space-y-1 mt-4">
+                    <p class="text-slate-400">Center Name: <span class="text-white font-semibold">@registrationModel.Name</span></p>
+                    <p class="text-slate-400">Reg #: <span class="text-white font-semibold">@registrationModel.RegistrationNumber</span></p>
+                    <p class="text-slate-400">Admin Email: <span class="text-white font-semibold">@registrationModel.Email</span></p>
+                    <p class="text-slate-400">Status: <span class="text-amber-400 font-bold">Pending Review (Approved upon verification)</span></p>
+                </div>
+
+                <div class="pt-4 flex justify-center gap-4">
+                    <button type="button" @onclick="GoToDashboard" class="bg-vital-500 hover:bg-vital-600 text-slate-950 font-extrabold text-sm px-6 py-3 rounded-xl shadow-lg transition-all cursor-pointer">
+                        Go to Dashboard &rarr;
                     </button>
                 </div>
-            }
+            </div>
+        }
+        else
+        {
+            <EditContext Model="registrationModel">
+                <DataAnnotationsValidator />
 
-            <!-- SECTION 2: Center Details -->
-            @if (currentStep == 2)
-            {
-                <div class="space-y-6">
-                    <h2 class="text-lg font-bold text-white border-b border-line pb-3">Step 2: Organization & Location Details</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Blood Center / Hospital Name</label>
-                            <input type="text" placeholder="Shifa International Blood Bank" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Government License / Reg No.</label>
-                            <input type="text" placeholder="PBTA-2026-889" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
+                @if (!string.IsNullOrEmpty(stepErrorMessage))
+                {
+                    <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold flex items-center gap-2">
+                        <span>⚠️</span>
+                        <span>@stepErrorMessage</span>
                     </div>
+                }
 
-                    <!-- Province & Searchable City -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Province / Region</label>
-                            <select @value="selectedProvince" @onchange="OnProvinceChanged" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                                <option value="">-- Select Province --</option>
-                                @foreach (var prov in citiesByProvince.Keys)
-                                {
-                                    <option value="@prov">@prov</option>
-                                }
-                            </select>
+                <!-- SECTION 1: Admin Credentials (User Entity) -->
+                @if (currentStep == 1)
+                {
+                    <div class="space-y-6">
+                        <div class="border-b border-line pb-3 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Step 1: Admin User Account</h2>
+                                <p class="text-xs text-slate-400">Maps to <code class="text-blood-400">User</code> Entity (<code class="text-slate-300">FullName</code>, <code class="text-slate-300">Email</code>, <code class="text-slate-300">PhoneNumber</code>)</p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">Step 1 of 3</span>
                         </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Full Name (FullName) *</label>
+                                <input type="text" @bind="registrationModel.FullName" @bind:event="oninput" placeholder="Dr. Sarah Khan" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Official Email (Email) *</label>
+                                <input type="email" @bind="registrationModel.Email" @bind:event="oninput" placeholder="admin@shifahospital.org" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Phone Number (PhoneNumber) *</label>
+                                <input type="tel" @bind="registrationModel.PhoneNumber" @bind:event="oninput" placeholder="0300-1234567" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Blood Group (Optional)</label>
+                                <select @bind="registrationModel.BloodGroup" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                                    <option value="">-- Select Blood Group --</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Password *</label>
+                                <input type="password" @bind="registrationModel.Password" @bind:event="oninput" placeholder="••••••••" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Confirm Password *</label>
+                                <input type="password" @bind="registrationModel.ConfirmPassword" @bind:event="oninput" placeholder="••••••••" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                        </div>
+
+                        <button type="button" @onclick="GoToStep2" class="w-full bg-blood-600 hover:bg-blood-700 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-blood-900/40 transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>Next: Blood Center Entity Details</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                }
+
+                <!-- SECTION 2: Center Details (BloodCenter Entity) -->
+                @if (currentStep == 2)
+                {
+                    <div class="space-y-6">
+                        <div class="border-b border-line pb-3 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Step 2: Blood Center & License Info</h2>
+                                <p class="text-xs text-slate-400">Maps to <code class="text-blood-400">BloodCenter</code> Entity Properties</p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">Step 2 of 3</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Center Name (Name) *</label>
+                                <input type="text" @bind="registrationModel.Name" @bind:event="oninput" placeholder="Shifa Regional Blood Bank" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Registration Number (RegistrationNumber) *</label>
+                                <input type="text" @bind="registrationModel.RegistrationNumber" @bind:event="oninput" placeholder="REG-PBTA-2026-889" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                        </div>
+
+                        <!-- File Upload Component for DocumentUrl -->
                         <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">City (Searchable)</label>
-                            <input type="text" list="city-list" placeholder="@(string.IsNullOrEmpty(selectedProvince) ? "Select Province First..." : "Type or select a city...")" disabled="@string.IsNullOrEmpty(selectedProvince)" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                            <datalist id="city-list">
-                                @if (!string.IsNullOrEmpty(selectedProvince) && citiesByProvince.ContainsKey(selectedProvince))
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Accreditation Document (DocumentUrl) *</label>
+                            <div class="mt-1.5 border-2 border-dashed border-line hover:border-blood-500/50 bg-surface2 rounded-xl p-5 text-center transition-all relative">
+                                <InputFile OnChange="HandleFileSelected" accept=".pdf,.png,.jpg,.jpeg" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+                                
+                                @if (string.IsNullOrEmpty(uploadedFileName))
                                 {
-                                    @foreach (var city in citiesByProvince[selectedProvince])
+                                    <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                                        <div class="w-10 h-10 rounded-full bg-surface3 flex items-center justify-center text-slate-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-xs text-slate-300 font-semibold">
+                                            <span class="text-vital-400 underline">Click to upload document</span> or drag and drop
+                                        </div>
+                                        <p class="text-[10px] text-slate-500">Formats: PDF, PNG, JPG (Max: 5 MB)</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="flex items-center justify-between bg-surface3 p-3 rounded-lg border border-line text-left z-20 relative">
+                                        <div class="flex items-center gap-3 overflow-hidden">
+                                            <div class="w-8 h-8 rounded-lg bg-blood-500/20 text-blood-400 flex items-center justify-center text-xs font-bold shrink-0">
+                                                📄
+                                            </div>
+                                            <div class="truncate">
+                                                <p class="text-xs font-bold text-white truncate">@uploadedFileName</p>
+                                                <p class="text-[10px] text-slate-400">@uploadedFileSizeFormatted</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" @onclick="RemoveUploadedFile" class="text-slate-400 hover:text-red-400 p-1 text-xs font-bold cursor-pointer transition-colors z-30">
+                                            ✕ Remove
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(uploadError))
+                            {
+                                <p class="text-xs text-red-400 font-semibold mt-1">⚠️ @uploadError</p>
+                            }
+                        </div>
+
+                        <!-- ProvinceId & CityId Selection (Guid Bindings) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Province (ProvinceId: Guid) *</label>
+                                <select value="@registrationModel.ProvinceId" @onchange="OnProvinceSelectChanged" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                                    <option value="@Guid.Empty">-- Select Province --</option>
+                                    @foreach (var prov in availableProvinces)
                                     {
-                                        <option value="@city"></option>
+                                        <option value="@prov.Id">@prov.Name</option>
                                     }
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">City (CityId: Guid) *</label>
+                                <select value="@registrationModel.CityId" @onchange="OnCitySelectChanged" disabled="@(registrationModel.ProvinceId == Guid.Empty)" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <option value="@Guid.Empty">@(registrationModel.ProvinceId == Guid.Empty ? "Select Province First..." : "-- Select City --")</option>
+                                    @foreach (var city in filteredCities)
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Contact Phone (ContactPhone) *</label>
+                                <input type="tel" @bind="registrationModel.ContactPhone" placeholder="051-8463000" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Emergency Phone (EmergencyPhone) *</label>
+                                <input type="tel" @bind="registrationModel.EmergencyPhone" placeholder="0300-9998877" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Complete Address (Address) *</label>
+                            <textarea rows="2" @bind="registrationModel.Address" placeholder="Sector H-8/4, Pitras Bukhari Road..." class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all"></textarea>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button type="button" @onclick="GoToStep1" class="w-1/3 border border-line hover:bg-surface3 text-slate-300 font-bold text-sm py-4 rounded-xl transition-all cursor-pointer">&larr; Back</button>
+                            <button type="button" @onclick="GoToStep3" class="w-2/3 bg-blood-600 hover:bg-blood-700 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-blood-900/40 transition-all cursor-pointer flex items-center justify-center gap-2">
+                                <span>Next: SaaS Plan & Review</span>
+                                <span>&rarr;</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <!-- SECTION 3: Plan Selection & Final Review -->
+                @if (currentStep == 3)
+                {
+                    <div class="space-y-6">
+                        <div class="border-b border-line pb-3 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Step 3: SaaS Subscription Tier & Entity Summary</h2>
+                                <p class="text-xs text-slate-400">Final step before saving <code class="text-blood-400">BloodCenter</code> & <code class="text-blood-400">User</code></p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">Step 3 of 3</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Free Trial Card -->
+                            <div @onclick='() => SelectPlan("trial")' class="border-2 @(registrationModel.SelectedPlan == "trial" ? "border-blood-500 bg-surface2" : "border-line bg-surface2/50 hover:border-slate-500") p-5 rounded-2xl cursor-pointer relative block transition-all">
+                                <input type="radio" name="plan" checked="@(registrationModel.SelectedPlan == "trial")" class="absolute top-4 right-4 accent-blood-500 pointer-events-none">
+                                <span class="bg-blood-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Standard Option</span>
+                                <h3 class="font-extrabold text-white text-base mt-2">14-Day Free Trial</h3>
+                                <p class="text-2xl font-black text-blood-400 mt-1">PKR 0 <span class="text-xs font-medium text-slate-400">/ 14 days</span></p>
+                                <ul class="text-xs text-slate-300 space-y-2 mt-4 font-semibold">
+                                    <li>✓ Live Inventory Tracking</li>
+                                    <li>✓ Emergency Donor Alerts</li>
+                                    <li>✓ Direct Portal Access</li>
+                                </ul>
+                            </div>
+
+                            <!-- Pro Plan Card -->
+                            <div @onclick='() => SelectPlan("pro")' class="border-2 @(registrationModel.SelectedPlan == "pro" ? "border-blood-500 bg-surface2" : "border-line bg-surface2/50 hover:border-slate-500") p-5 rounded-2xl cursor-pointer relative block transition-all">
+                                <input type="radio" name="plan" checked="@(registrationModel.SelectedPlan == "pro")" class="absolute top-4 right-4 accent-blood-500 pointer-events-none">
+                                <span class="bg-surface3 text-slate-300 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Pro Tier</span>
+                                <h3 class="font-extrabold text-white text-base mt-2">Enterprise Network</h3>
+                                <p class="text-2xl font-black text-white mt-1">PKR 15,000 <span class="text-xs font-medium text-slate-400">/ month</span></p>
+                                <ul class="text-xs text-slate-300 space-y-2 mt-4 font-semibold">
+                                    <li>✓ Multi-Branch Management</li>
+                                    <li>✓ Automated SMS Broadcasts</li>
+                                    <li>✓ Dedicated Support Line</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Entity Data Review Table -->
+                        <div class="bg-surface2 p-4 rounded-xl border border-line text-xs space-y-2">
+                            <h4 class="font-bold text-slate-300 uppercase tracking-wider text-[11px] border-b border-line pb-1 mb-2">Entity Mapping Payload Summary</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+                                <p class="text-slate-400">BloodCenter.Name: <span class="text-white font-semibold">@registrationModel.Name</span></p>
+                                <p class="text-slate-400">BloodCenter.RegistrationNumber: <span class="text-white font-semibold">@registrationModel.RegistrationNumber</span></p>
+                                
+                                <p class="text-slate-400">BloodCenter.ProvinceId: <span class="text-blood-400 font-mono font-semibold">@registrationModel.ProvinceId</span> (@GetProvinceName(registrationModel.ProvinceId))</p>
+                                <p class="text-slate-400">BloodCenter.CityId: <span class="text-blood-400 font-mono font-semibold">@registrationModel.CityId</span> (@GetCityName(registrationModel.CityId))</p>
+                                
+                                <p class="text-slate-400">BloodCenter.ContactPhone: <span class="text-white font-semibold">@registrationModel.ContactPhone</span></p>
+                                <p class="text-slate-400">BloodCenter.EmergencyPhone: <span class="text-white font-semibold">@registrationModel.EmergencyPhone</span></p>
+
+                                <p class="text-slate-400">User.FullName: <span class="text-white font-semibold">@registrationModel.FullName</span></p>
+                                <p class="text-slate-400">User.Email: <span class="text-white font-semibold">@registrationModel.Email</span></p>
+                                
+                                <p class="text-slate-400">User.PhoneNumber: <span class="text-white font-semibold">@registrationModel.PhoneNumber</span></p>
+                                <p class="text-slate-400">BloodCenter.DocumentUrl: <span class="text-vital-400 font-semibold truncate block">@(registrationModel.DocumentUrl ?? uploadedFileName ?? "Attached")</span></p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pt-2">
+                            <button type="button" @onclick="GoToStep2" class="w-1/3 border border-line hover:bg-surface3 text-slate-300 font-bold text-sm py-4 rounded-xl transition-all cursor-pointer" disabled="@isSubmitting">&larr; Back</button>
+                            
+                            <button type="button" @onclick="HandleSubmit" disabled="@isSubmitting" class="w-2/3 bg-vital-500 hover:bg-vital-600 text-slate-950 font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-vital-500/20 transition-all text-center flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                                @if (isSubmitting)
+                                {
+                                    <svg class="animate-spin h-5 w-5 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Registering Entities...</span>
                                 }
-                            </datalist>
+                                else
+                                {
+                                    <span>🚀 Submit & Register Center</span>
+                                }
+                            </button>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Emergency Contact Number</label>
-                            <input type="tel" placeholder="051-8463000" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Branch / Facility Code</label>
-                            <input type="text" placeholder="ISB-MAIN-01" class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Complete Address</label>
-                        <textarea rows="2" placeholder="Sector H-8/4, Pitras Bukhari Road..." class="w-full mt-1.5 bg-surface2 border border-line text-sm text-white font-semibold rounded-xl p-3 outline-none focus:border-blood-500 focus:bg-surface3 transition-all"></textarea>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <button type="button" @onclick="@(() => ChangeStep(1))" class="w-1/3 border border-line hover:bg-surface3 text-slate-300 font-bold text-sm py-4 rounded-xl transition-all cursor-pointer">&larr; Back</button>
-                        <button type="button" @onclick="@(() => ChangeStep(3))" class="w-2/3 bg-blood-600 hover:bg-blood-700 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-blood-900/40 transition-all cursor-pointer">Next: Select Trial Plan &rarr;</button>
-                    </div>
-                </div>
-            }
-
-            <!-- SECTION 3: Plan Selection -->
-            @if (currentStep == 3)
-            {
-                <div class="space-y-6">
-                    <h2 class="text-lg font-bold text-white border-b border-line pb-3">Step 3: Select SaaS Subscription Tier</h2>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Free Trial Card -->
-                        <label class="border-2 border-blood-500 bg-surface2 p-5 rounded-2xl cursor-pointer relative block transition-all hover:border-blood-400">
-                            <input type="radio" name="plan" checked class="absolute top-4 right-4 accent-blood-500">
-                            <span class="bg-blood-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Default Option</span>
-                            <h3 class="font-extrabold text-white text-base mt-2">14-Day Free Trial</h3>
-                            <p class="text-2xl font-black text-blood-400 mt-1">PKR 0 <span class="text-xs font-medium text-slate-400">/ 14 days</span></p>
-                            <ul class="text-xs text-slate-300 space-y-2 mt-4 font-semibold">
-                                <li>✓ Full Inventory Sync Access</li>
-                                <li>✓ Unlimited Emergency Broadcasts</li>
-                                <li>✓ 1 Center Location Branch</li>
-                                <li>✓ No Credit Card Required</li>
-                            </ul>
-                        </label>
-
-                        <!-- Pro Plan Card -->
-                        <label class="border border-line hover:border-slate-500 bg-surface2 p-5 rounded-2xl cursor-pointer relative block transition-all">
-                            <input type="radio" name="plan" class="absolute top-4 right-4 accent-blood-500">
-                            <span class="bg-surface3 text-slate-300 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Pro Tier</span>
-                            <h3 class="font-extrabold text-white text-base mt-2">Enterprise Network</h3>
-                            <p class="text-2xl font-black text-white mt-1">PKR 15,000 <span class="text-xs font-medium text-slate-400">/ month</span></p>
-                            <ul class="text-xs text-slate-300 space-y-2 mt-4 font-semibold">
-                                <li>✓ Multi-Branch Inventory Management</li>
-                                <li>✓ Priority Automated SMS Alerts</li>
-                                <li>✓ Direct Hospital API Integration</li>
-                                <li>✓ Dedicated Account Manager</li>
-                            </ul>
-                        </label>
-                    </div>
-
-                    <div class="flex gap-4 pt-4">
-                        <button type="button" @onclick="@(() => ChangeStep(2))" class="w-1/3 border border-line hover:bg-surface3 text-slate-300 font-bold text-sm py-4 rounded-xl transition-all cursor-pointer">&larr; Back</button>
-                        <NavLink href="admin/dashboard" class="w-2/3 bg-vital-500 hover:bg-vital-600 text-slate-950 font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-vital-500/20 transition-all text-center flex items-center justify-center">
-                            🚀 Activate Trial & Launch Portal
-                        </NavLink>
-                    </div>
-                </div>
-            }
-
-        </EditForm>
+                }
+            </EditContext>
+        }
     </div>
 </main>
 
 @code {
     private int currentStep = 1;
-    private string selectedProvince = "";
-    private object registrationModel = new();
+    private string? stepErrorMessage;
+    private bool isSubmitting = false;
+    private bool isSubmittedSuccess = false;
 
-    private void ChangeStep(int step)
+    // Model Bindings for BloodCenter + User Entities
+    private BloodCenterRegistrationFormModel registrationModel = new();
+
+    // File Upload State Variables
+    private IBrowserFile? selectedFile;
+    private string? uploadedFileName;
+    private string? uploadedFileSizeFormatted;
+    private string? uploadError;
+
+    // Filtered Cities based on selected ProvinceId
+    private List<CityLookUp> filteredCities = new();
+
+    protected override void OnInitialized()
     {
-        currentStep = step;
+        InitializeLookups();
     }
 
-    private void OnProvinceChanged(ChangeEventArgs e)
+    private void GoToStep1()
     {
-        selectedProvince = e.Value?.ToString() ?? "";
+        stepErrorMessage = null;
+        currentStep = 1;
     }
 
-    private void HandleRegistration()
+    private void GoToStep2()
     {
-        // Handle form submission logic
+        stepErrorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(registrationModel.FullName))
+        {
+            stepErrorMessage = "Please enter the Admin Full Name (FullName).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.Email) || !registrationModel.Email.Contains("@"))
+        {
+            stepErrorMessage = "Please enter a valid Admin Email address (Email).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.PhoneNumber))
+        {
+            stepErrorMessage = "Please enter the Admin Phone Number (PhoneNumber).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.Password) || registrationModel.Password.Length < 6)
+        {
+            stepErrorMessage = "Password must be at least 6 characters long.";
+            return;
+        }
+
+        if (registrationModel.Password != registrationModel.ConfirmPassword)
+        {
+            stepErrorMessage = "Passwords do not match. Please re-check.";
+            return;
+        }
+
+        currentStep = 2;
     }
 
-    private readonly Dictionary<string, List<string>> citiesByProvince = new()
+    private void GoToStep3()
     {
-        { "Punjab", new() { "Lahore", "Rawalpindi", "Faisalabad", "Multan", "Gujranwala", "Sialkot", "Bahawalpur", "Sargodha", "Rahim Yar Khan", "Sheikhupura", "Jhelum", "Gujrat", "Sahiwal" } },
-        { "Sindh", new() { "Karachi", "Hyderabad", "Sukkur", "Larkana", "Nawabshah", "Mirpur Khas", "Badin", "Thatta" } },
-        { "Khyber Pakhtunkhwa", new() { "Peshawar", "Mardan", "Abbottabad", "Swat", "Dera Ismail Khan", "Kohat", "Nowshera", "Bannu", "Mansehra" } },
-        { "Balochistan", new() { "Quetta", "Gwadar", "Turbat", "Khuzdar", "Sibi", "Chaman", "Hub" } },
-        { "Islamabad Capital Territory", new() { "Islamabad" } },
-        { "Azad Jammu & Kashmir", new() { "Muzaffarabad", "Mirpur", "Rawalakot", "Kotli" } },
-        { "Gilgit-Baltistan", new() { "Gilgit", "Skardu", "Hunza" } }
-    };
+        stepErrorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(registrationModel.Name))
+        {
+            stepErrorMessage = "Please enter the Blood Center Name (Name).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.RegistrationNumber))
+        {
+            stepErrorMessage = "Please enter the Registration Number (RegistrationNumber).";
+            return;
+        }
+
+        if (selectedFile == null && string.IsNullOrEmpty(registrationModel.DocumentUrl))
+        {
+            stepErrorMessage = "Please upload an accreditation document (DocumentUrl).";
+            return;
+        }
+
+        if (registrationModel.ProvinceId == Guid.Empty)
+        {
+            stepErrorMessage = "Please select a Province (ProvinceId).";
+            return;
+        }
+
+        if (registrationModel.CityId == Guid.Empty)
+        {
+            stepErrorMessage = "Please select a City (CityId).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.ContactPhone))
+        {
+            stepErrorMessage = "Please enter the Contact Phone (ContactPhone).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.EmergencyPhone))
+        {
+            stepErrorMessage = "Please enter the Emergency Phone (EmergencyPhone).";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(registrationModel.Address))
+        {
+            stepErrorMessage = "Please enter the full Address.";
+            return;
+        }
+
+        currentStep = 3;
+    }
+
+    private void SelectPlan(string planId)
+    {
+        registrationModel.SelectedPlan = planId;
+    }
+
+    private void OnProvinceSelectChanged(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out Guid selectedProvId))
+        {
+            registrationModel.ProvinceId = selectedProvId;
+            registrationModel.CityId = Guid.Empty;
+
+            filteredCities = availableCities.Where(c => c.ProvinceId == selectedProvId).ToList();
+        }
+        else
+        {
+            registrationModel.ProvinceId = Guid.Empty;
+            registrationModel.CityId = Guid.Empty;
+            filteredCities.Clear();
+        }
+    }
+
+    private void OnCitySelectChanged(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out Guid selectedCityId))
+        {
+            registrationModel.CityId = selectedCityId;
+        }
+        else
+        {
+            registrationModel.CityId = Guid.Empty;
+        }
+    }
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        uploadError = null;
+        stepErrorMessage = null;
+        var file = e.File;
+
+        if (file != null)
+        {
+            const long maxFileSize = 5 * 1024 * 1024;
+            if (file.Size > maxFileSize)
+            {
+                uploadError = "File size exceeds the 5MB limit.";
+                return;
+            }
+
+            var allowedExtensions = new[] { ".pdf", ".png", ".jpg", ".jpeg" };
+            var extension = System.IO.Path.GetExtension(file.Name).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                uploadError = "Invalid file type. Please upload a PDF, PNG, or JPG file.";
+                return;
+            }
+
+            selectedFile = file;
+            uploadedFileName = file.Name;
+            uploadedFileSizeFormatted = $"{Math.Round((double)file.Size / 1024 / 1024, 2)} MB";
+            registrationModel.DocumentUrl = $"uploads/licenses/{file.Name}";
+        }
+    }
+
+    private void RemoveUploadedFile()
+    {
+        selectedFile = null;
+        uploadedFileName = null;
+        uploadedFileSizeFormatted = null;
+        uploadError = null;
+        registrationModel.DocumentUrl = null;
+    }
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        stepErrorMessage = null;
+
+        await Task.Delay(1500);
+
+        isSubmitting = false;
+        isSubmittedSuccess = true;
+    }
+
+    private void GoToDashboard()
+    {
+        Navigation.NavigateTo("admin/dashboard");
+    }
+
+    private string GetProvinceName(Guid id)
+    {
+        return availableProvinces.FirstOrDefault(p => p.Id == id)?.Name ?? "N/A";
+    }
+
+    private string GetCityName(Guid id)
+    {
+        return availableCities.FirstOrDefault(c => c.Id == id)?.Name ?? "N/A";
+    }
+
+    public class BloodCenterRegistrationFormModel
+    {
+        public string FullName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string PhoneNumber { get; set; } = "";
+        public string? BloodGroup { get; set; }
+        public string Password { get; set; } = "";
+        public string ConfirmPassword { get; set; } = "";
+
+        public string Name { get; set; } = "";
+        public string RegistrationNumber { get; set; } = "";
+        public Guid ProvinceId { get; set; } = Guid.Empty;
+        public Guid CityId { get; set; } = Guid.Empty;
+        public string Address { get; set; } = "";
+        public string ContactPhone { get; set; } = "";
+        public string EmergencyPhone { get; set; } = "";
+        public string? DocumentUrl { get; set; }
+
+        public string SelectedPlan { get; set; } = "trial";
+    }
+
+    public class ProvinceLookUp
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    public class CityLookUp
+    {
+        public Guid Id { get; set; }
+        public Guid ProvinceId { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    private List<ProvinceLookUp> availableProvinces = new();
+    private List<CityLookUp> availableCities = new();
+
+    private void InitializeLookups()
+    {
+        var punjabId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var sindhId = Guid.Parse("22222211-2222-2222-2222-222222222222");
+        var kpkId = Guid.Parse("33333311-3333-3333-3333-333333333333");
+        var balochistanId = Guid.Parse("44444411-4444-4444-4444-444444444444");
+        var ictId = Guid.Parse("55555511-5555-5555-5555-555555555555");
+
+        availableProvinces = new List<ProvinceLookUp>
+        {
+            new() { Id = punjabId, Name = "Punjab" },
+            new() { Id = sindhId, Name = "Sindh" },
+            new() { Id = kpkId, Name = "Khyber Pakhtunkhwa" },
+            new() { Id = balochistanId, Name = "Balochistan" },
+            new() { Id = ictId, Name = "Islamabad Capital Territory" }
+        };
+
+        availableCities = new List<CityLookUp>
+        {
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Lahore" },
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Rawalpindi" },
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Faisalabad" },
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Multan" },
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Sialkot" },
+            new() { Id = Guid.NewGuid(), ProvinceId = punjabId, Name = "Gujranwala" },
+
+            new() { Id = Guid.NewGuid(), ProvinceId = sindhId, Name = "Karachi" },
+            new() { Id = Guid.NewGuid(), ProvinceId = sindhId, Name = "Hyderabad" },
+            new() { Id = Guid.NewGuid(), ProvinceId = sindhId, Name = "Sukkur" },
+
+            new() { Id = Guid.NewGuid(), ProvinceId = kpkId, Name = "Peshawar" },
+            new() { Id = Guid.NewGuid(), ProvinceId = kpkId, Name = "Mardan" },
+            new() { Id = Guid.NewGuid(), ProvinceId = kpkId, Name = "Abbottabad" },
+
+            new() { Id = Guid.NewGuid(), ProvinceId = balochistanId, Name = "Quetta" },
+            new() { Id = Guid.NewGuid(), ProvinceId = balochistanId, Name = "Gwadar" },
+
+            new() { Id = Guid.NewGuid(), ProvinceId = ictId, Name = "Islamabad" }
+        };
+    }
 }
