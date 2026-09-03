@@ -7,9 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BloodCenterServices\" />
     <Folder Include="AdminService\" />
-    <Folder Include="PublicServices\" />
+    <Folder Include="BloodCenterServices\" />
     <Folder Include="UsermanamengService\" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @using System.ComponentModel.DataAnnotations
+@using BCP_BL.Enums
 
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
     <div class="reveal glass rounded-2xl p-6 sm:p-10 shadow-2xl">
@@ -39,25 +40,21 @@
                         <InputText @bind-Value="requestModel.PatientName" placeholder="e.g. Zainab Bibi" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
                         <ValidationMessage For="() => requestModel.PatientName" class="text-blood-400 text-xs mt-1" />
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Patient Age</label>
-                        <InputNumber @bind-Value="requestModel.PatientAge" placeholder="e.g. 28" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
-                        <ValidationMessage For="() => requestModel.PatientAge" class="text-blood-400 text-xs mt-1" />
-                    </div>
+                   
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Required Group</label>
                         <InputSelect @bind-Value="requestModel.BloodGroup" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner">
-                            <option value="O-">O Negative (O-)</option>
-                            <option value="O+">O Positive (O+)</option>
-                            <option value="A-">A Negative (A-)</option>
-                            <option value="A+">A Positive (A+)</option>
-                            <option value="B-">B Negative (B-)</option>
-                            <option value="B+">B Positive (B+)</option>
-                            <option value="AB-">AB Negative (AB-)</option>
-                            <option value="AB+">AB Positive (AB+)</option>
+                            <option value="@BloodGroup.ONegative">O Negative (O-)</option>
+                            <option value="@BloodGroup.OPositive">O Positive (O+)</option>
+                            <option value="@BloodGroup.ANegative">A Negative (A-)</option>
+                            <option value="@BloodGroup.APositive">A Positive (A+)</option>
+                            <option value="@BloodGroup.BNegative">B Negative (B-)</option>
+                            <option value="@BloodGroup.BPositive">B Positive (B+)</option>
+                            <option value="@BloodGroup.ABNegative">AB Negative (AB-)</option>
+                            <option value="@BloodGroup.ABPositive">AB Positive (AB+)</option>
                         </InputSelect>
                         <ValidationMessage For="() => requestModel.BloodGroup" class="text-blood-400 text-xs mt-1" />
                     </div>
@@ -78,15 +75,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Hospital & Ward</label>
-                        <InputText @bind-Value="requestModel.HospitalAndWard" placeholder="e.g. PIMS Hospital, ICU Ward 3" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
-                        <ValidationMessage For="() => requestModel.HospitalAndWard" class="text-blood-400 text-xs mt-1" />
-                    </div>
+                   
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Attendant Mobile</label>
-                        <InputText @bind-Value="requestModel.AttendantMobile" placeholder="0300-1234567" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
-                        <ValidationMessage For="() => requestModel.AttendantMobile" class="text-blood-400 text-xs mt-1" />
+                        <InputText @bind-Value="requestModel.Contact" placeholder="0300-1234567" class="w-full bg-ink border-none text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:ring-1 focus:ring-blood-500 transition-all shadow-inner" />
+                        <ValidationMessage For="() => requestModel.Contact" class="text-blood-400 text-xs mt-1" />
                     </div>
                 </div>
 
@@ -113,61 +106,13 @@
 </main>
 
 @code {
-    private EmergencyRequestModel requestModel = new();
-    private bool isSubmitting = false;
-    private bool isSubmittedSuccessfully = false;
-
-    private async Task HandleEmergencyBroadcast()
-    {
-        isSubmitting = true;
-        await Task.Delay(1200);
-        isSubmitting = false;
-        isSubmittedSuccessfully = true;
-    }
-
-    private void ResetForm()
-    {
-        requestModel = new EmergencyRequestModel();
-        isSubmittedSuccessfully = false;
-    }
-
-    public class EmergencyRequestModel
-    {
-        [Required(ErrorMessage = "Patient name is required.")]
-        public string PatientName { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Patient age is required.")]
-        [Range(1, 120, ErrorMessage = "Please enter a valid age.")]
-        public int? PatientAge { get; set; }
-
-        [Required(ErrorMessage = "Please select a blood group.")]
-        public string BloodGroup { get; set; } = "O-";
-
-        [Required(ErrorMessage = "Units count is required.")]
-        [Range(1, 20, ErrorMessage = "Units must be between 1 and 20.")]
-        public int UnitsRequired { get; set; } = 2;
-
-        [Required(ErrorMessage = "Please select an urgency level.")]
-        public string UrgencyLevel { get; set; } = "Immediate";
-
-        [Required(ErrorMessage = "Hospital name and ward details are required.")]
-        public string HospitalAndWard { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Attendant contact number is required.")]
-        [Phone(ErrorMessage = "Please enter a valid phone number.")]
-        public string AttendantMobile { get; set; } = string.Empty;
-
-        public string? CaseDescription { get; set; }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+   [Inject]
+        private IJSRuntime JSRuntime { get; set; } = default!;
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("initPublicPageScript");
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("initPublicPageScript");
+            }
         }
-    }
-
-    [Inject]
-    private IJSRuntime JSRuntime { get; set; } = default!;
 }
