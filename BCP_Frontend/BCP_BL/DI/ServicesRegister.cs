@@ -1,4 +1,6 @@
-﻿using BCP_BL.AuthenticationServices.Implementation;
+﻿using BCP_BL.AdminService.Implemantation;
+using BCP_BL.AdminService.Interface;
+using BCP_BL.AuthenticationServices.Implementation;
 using BCP_BL.AuthenticationServices.interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,7 @@ namespace BCP_BL.DI
 
         public static IServiceCollection ServiceConfig(this IServiceCollection service) => service
           .AddScoped<IAuthService, AuthService>()
+            .AddScoped<IAdminServices, AdminServices>()
             .AddScoped<HttpClient>();
     }
 }
