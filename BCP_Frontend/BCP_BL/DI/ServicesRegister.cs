@@ -1,4 +1,6 @@
-﻿using BCP_BL.AuthenticationServices.Implementation;
+﻿using BCP_BL.AdminService.Implemantation;
+using BCP_BL.AdminService.Interface;
+using BCP_BL.AuthenticationServices.Implementation;
 using BCP_BL.AuthenticationServices.interfaces;
 using BCP_BL.BloodCenterServices.CenterDashBoard.Implementation;
 using BCP_BL.BloodCenterServices.CenterDashBoard.Interface;
@@ -15,6 +17,7 @@ namespace BCP_BL.DI
           .AddScoped<IAuthService, AuthService>()
           
             .AddScoped<IEmergencyBroadcastService, EmergencyBroadcastService>();
+            .AddScoped<IAdminServices, AdminServices>()
         #region Haroon Services
             .AddScoped<ICenterActivityService , CenterActivityService>()
             .AddScoped<ICenterDashboardService, CenterDashboardService>()
@@ -22,6 +25,8 @@ namespace BCP_BL.DI
             .AddScoped<IStockMatrixService, StockMatrixService>()
         #endregion
           
+            
+     
         #region Haroon Services
                 .AddScoped<ICityService, CityService>()
                 .AddScoped<IProvinceService, ProvinceService>();
