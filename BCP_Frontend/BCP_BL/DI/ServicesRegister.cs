@@ -15,6 +15,8 @@ namespace BCP_BL.DI
 
         public static IServiceCollection ServiceConfig(this IServiceCollection service) => service
           .AddScoped<IAuthService, AuthService>()
+          
+            .AddScoped<IEmergencyBroadcastService, EmergencyBroadcastService>();
             .AddScoped<IAdminServices, AdminServices>()
         #region Haroon Services
             .AddScoped<ICenterActivityService , CenterActivityService>()
@@ -22,6 +24,7 @@ namespace BCP_BL.DI
             .AddScoped<IStockStatusService, StockStatusService>()
             .AddScoped<IStockMatrixService, StockMatrixService>()
         #endregion
+          
             
      
         #region Haroon Services
