@@ -1,5 +1,4 @@
 ﻿@page "/"
-@inject NavigationManager Navigation
 @inject IJSRuntime JS
 
 <main>
@@ -36,25 +35,48 @@
                 <EditForm Model="this" OnValidSubmit="HandleSearch" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
                     <!-- PROVINCE / REGION DROPDOWN -->
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold uppercase text-slate-400">Province / Region</label>
-                        <InputSelect Value="SelectedProvince" ValueExpression="() => SelectedProvince" ValueChanged="(string val) => OnProvinceChanged(val)" id="province" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+                        <label class="text-xs font-bold uppercase text-slate-400">
+                            Province / Region
+                        </label>
+
+                        <InputSelect Value="SelectedProvinceId"
+                                     ValueExpression="() => SelectedProvinceId"
+                                     ValueChanged="@(async (Guid? value) => await OnProvinceChanged(value))"
+                                     id="province"
+                                     class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+
                             <option value="">Select Province</option>
-                            @foreach (var province in ProvinceCitiesMap.Keys)
+
+                            @foreach (var province in Provinces)
                             {
-                                <option value="@province">@province</option>
+                                <option value="@province.Id">
+                                    @province.ProvinceName
+                                </option>
                             }
+
                         </InputSelect>
                     </div>
 
                     <!-- CITY DROPDOWN (DYNAMICALLY FILTERED) -->
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold uppercase text-slate-400">City</label>
-                        <InputSelect @bind-Value="SelectedCity" disabled="@(string.IsNullOrEmpty(SelectedProvince))" id="city" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <label class="text-xs font-bold uppercase text-slate-400">
+                            City
+                        </label>
+
+                        <InputSelect @bind-Value="SelectedCityId"
+                                     disabled="@(!SelectedProvinceId.HasValue)"
+                                     id="city"
+                                     class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+
                             <option value="">Select City</option>
+
                             @foreach (var city in AvailableCities)
                             {
-                                <option value="@city.ToLower()">@city</option>
+                                <option value="@city.Id">
+                                    @city.City_Name
+                                </option>
                             }
+
                         </InputSelect>
                     </div>
 
@@ -259,58 +281,4 @@
 </main>
 
 @code {
-    public string SelectedProvince { get; set; } = "";
-    public string SelectedCity { get; set; } = "";
-    public string SelectedBloodGroup { get; set; } = "";
-    public string SelectedComponent { get; set; } = "whole";
-
-    private List<string> AvailableCities = new();
-
-    private readonly Dictionary<string, List<string>> ProvinceCitiesMap = new()
-    {
-        { "Federal Capital", new List<string> { "Islamabad" } },
-        { "Punjab", new List<string> { "Lahore", "Rawalpindi", "Faisalabad", "Multan", "Gujranwala", "Sialkot", "Bahawalpur", "Sargodha" } },
-        { "Sindh", new List<string> { "Karachi", "Hyderabad", "Sukkur", "Larkana", "Nawabshah" } },
-        { "Khyber Pakhtunkhwa", new List<string> { "Peshawar", "Mardan", "Abbottabad", "Swat", "Dera Ismail Khan", "Kohat" } },
-        { "Balochistan", new List<string> { "Quetta", "Gwadar", "Turbat", "Khuzdar" } },
-        { "Gilgit-Baltistan", new List<string> { "Gilgit", "Skardu" } },
-        { "Azad Kashmir", new List<string> { "Muzaffarabad", "Mirpur" } }
-    };
-
-    private void OnProvinceChanged(string province)
-    {
-        SelectedProvince = province;
-        SelectedCity = ""; // Reset city selection
-
-        if (!string.IsNullOrEmpty(province) && ProvinceCitiesMap.ContainsKey(province))
-        {
-            AvailableCities = ProvinceCitiesMap[province];
-        }
-        else
-        {
-            AvailableCities.Clear();
-        }
-    }
-
-    private void HandleSearch()
-    {
-        var query = $"search-stock?province={Uri.EscapeDataString(SelectedProvince)}&city={Uri.EscapeDataString(SelectedCity)}&group={Uri.EscapeDataString(SelectedBloodGroup)}&component={Uri.EscapeDataString(SelectedComponent)}";
-        Navigation.NavigateTo(query);
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await Task.Delay(250);
-            try
-            {
-                await JS.InvokeVoidAsync("initPublicPageScript");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"JS Init Error: {ex.Message}");
-            }
-        }
-    }
 }
