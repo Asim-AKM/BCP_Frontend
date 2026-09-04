@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BloodCenterServices\" />
     <Folder Include="AdminService\" />
+    <Folder Include="Models\Requests\" />
+    <Folder Include="PublicServices\" />
     <Folder Include="UsermanamengService\" />
   </ItemGroup>
 
