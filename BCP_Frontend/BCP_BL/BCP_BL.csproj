@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="AdminService\" />
     <Folder Include="BloodCenterServices\" />
+    <Folder Include="Models\Requests\" />
+    <Folder Include="PublicServices\" />
     <Folder Include="UsermanamengService\" />
   </ItemGroup>
 
