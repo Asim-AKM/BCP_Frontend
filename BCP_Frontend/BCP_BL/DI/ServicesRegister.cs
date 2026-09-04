@@ -1,4 +1,6 @@
-﻿using BCP_BL.AuthenticationServices.Implementation;
+﻿using BCP_BL.AdminService.Implemantation;
+using BCP_BL.AdminService.Interface;
+using BCP_BL.AuthenticationServices.Implementation;
 using BCP_BL.AuthenticationServices.interfaces;
 using BCP_BL.BloodCenterServices.CenterDashBoard.Implementation;
 using BCP_BL.BloodCenterServices.CenterDashBoard.Interface;
@@ -13,15 +15,15 @@ namespace BCP_BL.DI
 
         public static IServiceCollection ServiceConfig(this IServiceCollection service) => service
           .AddScoped<IAuthService, AuthService>()
+            .AddScoped<IAdminServices, AdminServices>()
         #region Haroon Services
             .AddScoped<ICenterActivityService , CenterActivityService>()
             .AddScoped<ICenterDashboardService, CenterDashboardService>()
             .AddScoped<IStockStatusService, StockStatusService>()
             .AddScoped<IStockMatrixService, StockMatrixService>()
         #endregion
-            .AddScoped<HttpClient>();
-           // .AddScoped<HttpClient>()
-
+            
+     
         #region Haroon Services
                 .AddScoped<ICityService, CityService>()
                 .AddScoped<IProvinceService, ProvinceService>();

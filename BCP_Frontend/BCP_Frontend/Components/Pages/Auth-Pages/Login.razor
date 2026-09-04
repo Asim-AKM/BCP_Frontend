@@ -179,14 +179,14 @@
     private async Task HandleLogin()
     {
 
-        var result = await AuthService.LoginAsync(loginRequest);
-        // if (selectedRole == "center")
-        // {
-        //     Navigation.NavigateTo("center/dashboard");
-        // }
-        // else
-        // {
-        //     Navigation.NavigateTo("admin/dashboard");
-        // }
+       // var result = await AuthService.LoginAsync(loginRequest);
+        if (selectedRole == "center")
+        {
+            Navigation.NavigateTo("center/dashboard");
+        }
+        else
+        {
+            Navigation.NavigateTo("admin/dashboard");
+        }
     }
 }
