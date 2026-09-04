@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="BloodCenterServices\" />
     <Folder Include="AdminService\" />
-    <Folder Include="PublicServices\" />
     <Folder Include="UsermanamengService\" />
   </ItemGroup>
 
