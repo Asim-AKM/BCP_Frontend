@@ -16,20 +16,16 @@ namespace BCP_BL.DI
         public static IServiceCollection ServiceConfig(this IServiceCollection service) => service
           .AddScoped<IAuthService, AuthService>()
           
-            .AddScoped<IEmergencyBroadcastService, EmergencyBroadcastService>();
+            .AddScoped<IEmergencyBroadcastService, EmergencyBroadcastService>()
             .AddScoped<IAdminServices, AdminServices>()
         #region Haroon Services
             .AddScoped<ICenterActivityService , CenterActivityService>()
             .AddScoped<ICenterDashboardService, CenterDashboardService>()
             .AddScoped<IStockStatusService, StockStatusService>()
             .AddScoped<IStockMatrixService, StockMatrixService>()
-        #endregion
-          
-            
-     
-        #region Haroon Services
-                .AddScoped<ICityService, CityService>()
-                .AddScoped<IProvinceService, ProvinceService>();
+            .AddScoped<ICityService, CityService>()
+            .AddScoped<IBloodInventoryService, BloodInventoryService>()
+            .AddScoped<IProvinceService, ProvinceService>();
         #endregion
     }
 }
