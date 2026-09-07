@@ -8,14 +8,14 @@ namespace BCP_BL.Enums
 {
     public enum BloodGroup
     {
-        APositive = 1,
-        ANegative = 2,
-        BPositive = 3,
-        BNegative = 4,
-        ABPositive = 5,
-        ABNegative = 6,
-        OPositive = 7,
-        ONegative = 8
+        APositive ,
+        ANegative,
+        BPositive,
+        BNegative ,
+        ABPositive ,
+        ABNegative ,
+        OPositive ,
+        ONegative
     }
     public enum BloodRequestStatus
     {
@@ -24,5 +24,13 @@ namespace BCP_BL.Enums
         Dispatched = 3,
         Rejected = 4,
         Cancelled = 5
+    }
+    public enum BloodComponentType
+    {
+        WholeBlood ,
+        PackedRBC ,
+        Plasma ,
+        Platelets ,
+        Cryoprecipitate
     }
 }

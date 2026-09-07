@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BCP_BL.Enums
 @inject IJSRuntime JS
 
 <main>
@@ -85,24 +86,47 @@
                         <label class="text-xs font-bold uppercase text-slate-400">Blood Group</label>
                         <InputSelect @bind-Value="SelectedBloodGroup" id="blood-group" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
                             <option value="">Select Group</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
+                            <option value="@BloodGroup.APositive">A+</option>
+                            <option value="@BloodGroup.ANegative">A-</option>
+                            <option value="@BloodGroup.BPositive">B+</option>
+                            <option value="@BloodGroup.BNegative">B-</option>
+                            <option value="@BloodGroup.OPositive">O+</option>
+                            <option value="@BloodGroup.ONegative">O-</option>
+                            <option value="@BloodGroup.ABPositive">AB+</option>
+                            <option value="@BloodGroup.ABNegative">AB-</option>
                         </InputSelect>
                     </div>
 
                     <!-- COMPONENT DROPDOWN -->
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold uppercase text-slate-400">Component</label>
-                        <InputSelect @bind-Value="SelectedComponent" id="component" class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
-                            <option value="whole">Whole Blood</option>
-                            <option value="plasma">Plasma</option>
-                            <option value="platelets">Platelets</option>
+                        <label class="text-xs font-bold uppercase text-slate-400">
+                            Component
+                        </label>
+
+                        <InputSelect @bind-Value="SelectedComponent"
+                                     id="component"
+                                     class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+
+                            <option value="@BloodComponentType.WholeBlood">
+                                Whole Blood
+                            </option>
+
+                            <option value="@BloodComponentType.Plasma">
+                                Plasma
+                            </option>
+
+                            <option value="@BloodComponentType.Platelets">
+                                Platelets
+                            </option>
+
+                            <option value="@BloodComponentType.PackedRBC">
+                                Packed RBC
+                            </option>
+
+                            <option value="@BloodComponentType.Cryoprecipitate">
+                                Cryoprecipitate
+                            </option>
+
                         </InputSelect>
                     </div>
 
