@@ -31,8 +31,52 @@
         }
         else
         {
-            <EditForm Model="requestModel" OnValidSubmit="HandleEmergencyBroadcast" class="space-y-6">
+            <EditForm Model="this" OnValidSubmit="HandleEmergencyBroadcast" class="space-y-6">
                 <DataAnnotationsValidator />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <!-- PROVINCE / REGION DROPDOWN -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">
+                            Province / Region
+                        </label>
+
+                        <InputSelect Value="ProvinceID"ValueExpression="() => ProvinceID"ValueChanged="@(async (Guid? value) => await OnProvinceChanged(value))"
+                                     id="province"
+                                     class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3 outline-none focus:border-blood-500">
+
+                            <option value="">Select Province</option>
+
+                            @foreach (var province in Provinces)
+                            {
+                                <option value="@province.Id">
+                                    @province.ProvinceName
+                                </option>
+                            }
+
+                        </InputSelect>
+                    </div>
+
+                    <!-- CITY DROPDOWN (DYNAMICALLY FILTERED) -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-bold uppercase text-slate-400">City</label>
+
+                        <InputSelect @bind-Value="CityId"disabled="@(!ProvinceID.HasValue)"
+                                     id="city"
+                                     class="w-full bg-ink border border-line text-sm font-semibold text-slate-100 rounded-xl p-3">
+
+                            <option value="">Select City</option>
+
+                            @foreach (var city in AvailableCities)
+                            {
+                                <option value="@city.Id">
+                                    @city.City_Name
+                                </option>
+                            }
+
+                        </InputSelect>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>

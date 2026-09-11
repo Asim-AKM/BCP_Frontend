@@ -10,13 +10,13 @@ namespace BCP_BL.Models
 {
     public class EmergencyBroadcastRequest
     {
-        public Guid BloodRequestId { get; set; }
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "Patient name is required.")]
         public string PatientName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Please select a blood group.")]
         public BloodGroup BloodGroup { get; set; }
-        public Guid Id { get; set; }
-        public Guid ProvinceID { get; set; }
+        public Guid CityId { get; set; }
+        public Guid ProvinceId { get; set; }
         [Required(ErrorMessage = "Units count is required.")]
         [Range(1, 20, ErrorMessage = "Units must be between 1 and 20.")]
         public int UnitsRequired { get; set; }
