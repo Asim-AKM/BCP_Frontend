@@ -2,10 +2,13 @@
 using BCP_BL.AdminService.Interface;
 using BCP_BL.AuthenticationServices.Implementation;
 using BCP_BL.AuthenticationServices.interfaces;
+<<<<<<< HEAD
 using BCP_BL.BloodCenterServices.CenterDashBoard.Implementation;
 using BCP_BL.BloodCenterServices.CenterDashBoard.Interface;
 using BCP_BL.PublicServices.Implementation;
 using BCP_BL.PublicServices.Interface;
+=======
+>>>>>>> parent of c0db38b (Dynamic province/city dropdowns with API integration)
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BCP_BL.DI
@@ -15,6 +18,7 @@ namespace BCP_BL.DI
 
         public static IServiceCollection ServiceConfig(this IServiceCollection service) => service
           .AddScoped<IAuthService, AuthService>()
+<<<<<<< HEAD
           
             .AddScoped<IEmergencyBroadcastService, EmergencyBroadcastService>()
             .AddScoped<IAdminServices, AdminServices>()
@@ -31,5 +35,8 @@ namespace BCP_BL.DI
                 .AddScoped<ICityService, CityService>()
                 .AddScoped<IProvinceService, ProvinceService>();
         #endregion
+=======
+            .AddScoped<HttpClient>();
+>>>>>>> parent of c0db38b (Dynamic province/city dropdowns with API integration)
     }
 }
