@@ -8,11 +8,10 @@
 
   <ItemGroup>
     <Folder Include="AdminService\" />
-<<<<<<< HEAD
+
     <Folder Include="BloodCenterServices\" />
     <Folder Include="Models\Requests\" />
-=======
->>>>>>> parent of c0db38b (Dynamic province/city dropdowns with API integration)
+
     <Folder Include="PublicServices\" />
     <Folder Include="UsermanamengService\" />
   </ItemGroup>
